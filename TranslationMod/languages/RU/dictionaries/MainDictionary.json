@@ -12,7 +12,7 @@
 			"Value": "Доброе утро! Меня рано разбудили звуки дождя, и мне захотелось приготовить тебе завтрак.[194 195 210 211 216]#$e#Оставайся в тепле и не перетруждайся. Я хочу, чтобы ты оставался здоровым.^Я хочу, чтобы ты оставалась здоровой."
 		}, {
 			"Key": "What's on your agenda today, dear?#$e#I don't want to go outside in this weather... I'll just do some things around the house.#$e#Maybe I'll make something hot for dinner.",
-			"Value": "Что у тебя сегодня в планах, дорогой?^Что у тебя сегодня в планах, дорогая?#$e# Вот у меня нет ни малейшего желания, что то делать на улице в такую погоду... Я лучше займусь домашними делами. #$e#Может приготовлю жаркое на ужин."
+			"Value": "Что у тебя сегодня в планах, дорогой?^Что у тебя сегодня в планах, дорогая?#$e#Вот у меня нет ни малейшего желания, что то делать на улице в такую погоду... Я лучше займусь домашними делами. #$e#Может приготовлю жаркое на ужин."
 		}, {
 			"Key": "Any dinner requests for tonight?",
 			"Value": "Какие пожелания на ужин?"
@@ -48,7 +48,7 @@
 			"Value": "Похоже, что сегодня мне стоит заняться устранением протечек в крыше и окнах."
 		}, {
 			"Key": "The rain makes it feel like we're all alone.$l#$e#I'm cold... Aren't you ready to tuck into bed?$l",
-			"Value": "От этого дождя у меня такое чувство, что мы совсем одни на свете.$l#$e# Мне так холодно... Разве ты не собираешься укутаться в тёплом одеяле?$l"
+			"Value": "От этого дождя у меня такое чувство, что мы совсем одни на свете.$l#$e#Мне так холодно... Разве ты не собираешься укутаться в тёплом одеяле?$l"
 		}, {
 			"Key": "Make sure you change into something warm. I don't want you to get sick.#$e#Can you hear the rain pattering on the roof, @?",
 			"Value": "Обязательно оденься во что-нибудь тёплое.#$e#Слышишь как дождь по крыше барабанит, @? Я не хочу что бы ты простудился.^ Я не хочу что бы ты простудилась."
@@ -141,7 +141,7 @@
 			"Value": "Есть слишком много всего, что я хочу успеть сделать сегодня... Может быть, я буду просто смотреть телевизор вместо этого."
 		}, {
 			"Key": "Did you get everything done today, @?#$e#I did some house chores... but now I'm so tired.#$e#I'm ready for bed whenever you are.$h",
-			"Value": "У тебя на сегодня больше не осталось дел, @?#$e#Я сегодня немного похлопотала по дому...^Я сегодня немного поработал в доме... и теперь у меня не осталось ни капли сил.#$e# Скажешь, когда будешь ложиться.$h"
+			"Value": "У тебя на сегодня больше не осталось дел, @?#$e#Я сегодня немного похлопотала по дому...^Я сегодня немного поработал в доме... и теперь у меня не осталось ни капли сил.#$e#Скажешь, когда будешь ложиться.$h"
 		}, {
 			"Key": "Wow, you look like you did a lot of work today.#$e#Now you should just relax and kick back for the night.$h",
 			"Value": "Вау, ты выглядишь так, как будто сделал кучу работы сегодня.#$e#Теперь ты должен просто расслабиться и лечь спать на ночь.$h"
@@ -153,7 +153,7 @@
 			"Value": "Ты закончил с работой на сегодня? Я готова немного повеселиться.$h#$e#Но если ты устал - я пойму."
 		}, {
 			"Key": "*phew*! I just finished my chores. Now we can spend some time together.$h#$e#So, tell me about your day.$l#$e#...$h",
-			"Value": "*фух*! Ну вот и всё. Теперь когда у нас обоих больше не осталось ни каких дел, может проведём время вместе?$h#$e# Расскажи мне, как прошёл твой день.$l#$e#...$h"
+			"Value": "*фух*! Ну вот и всё. Теперь когда у нас обоих больше не осталось ни каких дел, может проведём время вместе?$h#$e#Расскажи мне, как прошёл твой день.$l#$e#...$h"
 		}, {
 			"Key": "You look like you're ready for bed, @. Should I lull you to sleep with the technical details of my latest project?$h#$e#*yawn*... To be honest, I'm kind of sleepy too.",
 			"Value": "@, смотрю ты уже готовишься ко сну. Может мне стоит убаюкать тебя подробностями моего последнего проекта?$h#$e#*зевает*... Хотя, если честно, Я тоже уже валюсь с ног."
@@ -180,16 +180,16 @@
 			"Value": "Мои руки жаждут действий... Как ты отнесёшься к хорошему  освежающему массажу?$l^ Я чувствую себя таким измождённым... это хороший знак, значит Я хорошо поработал сегодня.$h"
 		}, {
 			"Key": "#$c .5#You always smell so good after a day of hard work. It's your natural musk!^You smell sweet, my dear. Like a honeycomb drifting on a pool of spice tea.#$e#Come here, let me massage your back. You look tense.$l^You smell sweet, my dear. Like a cinnamon leaf floating in the summer breeze.",
-			"Value": "#$c .5#После тяжёлой работы ты так чарующе пахнешь. Видимо это твои естественные феромоны!^Ты так приятно пахнешь дорогая. Как кусочек мёда, плавающий в пряном чае.#$e# Иди ко мне, дай расслабить твои мышцы. Ты выглядишь таким напряжённым. $l^ Ты так приятно пахнешь дорогая. Как листик корицы плывущий в летнем ветре."
+			"Value": "#$c .5#После тяжёлой работы ты так чарующе пахнешь. Видимо это твои естественные феромоны!^Ты так приятно пахнешь дорогая. Как кусочек мёда, плавающий в пряном чае.#$e#Иди ко мне, дай расслабить твои мышцы. Ты выглядишь таким напряжённым. $l^ Ты так приятно пахнешь дорогая. Как листик корицы плывущий в летнем ветре."
 		}, {
 			"Key": "#$c .5#I wonder if the moon is visible tonight?#$e#So, did you get everything done on the farm today? If you didn't I won't be mad!",
-			"Value": "#$c .5#Интересно, сегодня ночью взойдёт луна?#$e# Итак, ты успел сделать все дела на ферме?^Итак, ты успела сделать все дела на ферме? Не беспокойся, Я не буду злится если нет!"
+			"Value": "#$c .5#Интересно, сегодня ночью взойдёт луна?#$e#Итак, ты успел сделать все дела на ферме?^Итак, ты успела сделать все дела на ферме? Не беспокойся, Я не буду злится если нет!"
 		}, {
 			"Key": "It's a beautiful day today, isn't it?$h#$e#Days like this make work a little more pleasant.",
-			"Value": "Сегодня чудесный день, на правда ли?$h#$e# Работать в такие дни ещё приятней. "
+			"Value": "Сегодня чудесный день, на правда ли?$h#$e#Работать в такие дни ещё приятней. "
 		}, {
 			"Key": "I'm just going to relax and inspect the farm today, okay?#$e#It's just such a nice-looking area.$h",
-			"Value": "Я сегодня собираюсь отдохнуть и прогуляется по ферме, хорошо?#$e# Мы живём в таком живописном месте.$h"
+			"Value": "Я сегодня собираюсь отдохнуть и прогуляется по ферме, хорошо?#$e#Мы живём в таком живописном месте.$h"
 		}, {
 			"Key": "Hi, honey! If I knew more about farm work I'd help you out more. Sorry!#$e#I'll be thinking of you.$h",
 			"Value": ""
@@ -960,7 +960,7 @@
 			"Value": "Если вдруг ты найдёшь паука в доме, не раздави его! Просто дай мне знать и я вынесу бедолагу наружу."
 		}, {
 			"Key": "Today is going to be a fantastic day... I can feel it!$h#$e#I get this special feeling in my nose...",
-			"Value": "Сегодня будет фантастический день... Я чувствую это!$h#$e# У меня особое чувство в носу..."
+			"Value": "Сегодня будет фантастический день... Я чувствую это!$h#$e#У меня особое чувство в носу..."
 		}, {
 			"Key": "I've had this recurring nightmare that you gave me a buzz cut... You wouldn't ever do that to me, would you?$s#$e#I trust you.",
 			"Value": "У меня снова был кошмар, где я был пострижен тобой очень коротко... Ты же не сделаешь такого со мной?$s#$e#Я тебе верю."
@@ -1096,7 +1096,7 @@
 			"Value": "Я не могу выйти на улицу сегодня... мои волосы станут слабыми. Прости меня, дорогуша.$s#$e#Я хочу выглядеть как можно лучше для тебя."
 		}, {
 			"Key": "Are you going out in this weather? Just make sure to wipe your boots on the way back in, honey.#$e#I'll just stay here and do some housework.",
-			"Value": "Ты собираешься пойти на улицу в эту погоду? Просто убедись что вытер свои ботики по пути обратно, дорогуша..#$e# Я просто останусь здесь и сделаю немного работы по дому."
+			"Value": "Ты собираешься пойти на улицу в эту погоду? Просто убедись что вытер свои ботики по пути обратно, дорогуша..#$e#Я просто останусь здесь и сделаю немного работы по дому."
 		}, {
 			"Key": "Oh no... If this weather keeps up I'll get so pale.$s",
 			"Value": "О нет... Если эта погода продолжится, я стану такой бледной.$s"
@@ -2905,7 +2905,7 @@
 			"Value": "Я видела съедобные грибы в лесу.#$e#Фуражировка забавный способ, чтобы заработать немного денег. Или ты можешь использовать то, что найдешь в качестве подарков или еды."
 		}, {
 			"Key": "Is it just me, or does Abigail play too many video games?#$e#Maybe I'm a little old-fashioned.",
-			"Value": "Мне кажется или Эбби слишком много играет в видио игры.#$e# Возможно я немного старомодна."
+			"Value": "Мне кажется или Эбби слишком много играет в видио игры.#$e#Возможно я немного старомодна."
 		}, {
 			"Key": "You know, I used to want to be a farmer myself. Well, more like a rancher.#$e#I always loved movies about the wild west when I was a girl.",
 			"Value": "Ты знаешь, я когда-то хотела, чтобы у меня была ферма. Ну, больше похожее на ранчо.#$e#Я всегда любила фильмы про Дикий Запад, когда я была маленькой."
@@ -3051,7 +3051,7 @@
 			"Value": "Хм... если уровень стриголактонов будет увеличен, это будет прямо влиять на рост микоризных?$u#$b#Ой! Прости. Я искал кое-какие данные и не заметил тебя.#$e#Тебе что-то нужно?"
 		}, {
 			"Key": "I became a scientist because I wanted to contribute to the progression of our species.#$e#Of course, none of this would be possible without farmers such as yourself.$h",
-			"Value": "Я стал ученым, потому что я хотел бы внести свой вклад в прогресс нашего вида.#$e# Конечно, ничто из этого не было бы возможно без фермеров, таких, как я. $h"
+			"Value": "Я стал ученым, потому что я хотел бы внести свой вклад в прогресс нашего вида.#$e#Конечно, ничто из этого не было бы возможно без фермеров, таких, как я. $h"
 		}, {
 			"Key": "During this time of year I divert my attentions to fungi.",
 			"Value": "В это время года мое внимание привлекают грибы."
@@ -3078,7 +3078,7 @@
 			"Value": "Поговори с моей женой, если хочешь сделать пристройку к дому."
 		}, {
 			"Key": "Do you have a kitchen in your house yet?#$e#Cooking is kind of like doing lab work.",
-			"Value": "В твоём доме уже есть кухня? #$e# Кулинария это почти как выполнение лабораторной работы."
+			"Value": "В твоём доме уже есть кухня? #$e#Кулинария это почти как выполнение лабораторной работы."
 		}, {
 			"Key": "Do you have any animals on your farm?",
 			"Value": "У тебя есть животные на ферме?"
@@ -3480,8 +3480,8 @@
 			"Key": "George spends the whole day in front of that darned television set.#$e#I wish he'd go outside more. Some fresh air would do him good.",
 			"Value": "Джордж проводит слишком много времени перед этим проклятым телевизором.#$e#Я хочу, чтобы он выходил на улицу почаще. Свежий воздух пойдет ему на пользу."
 		}, {
-			"Key": "I used to love looking at the clouds, but I have trouble seeing them these days.#$e# My eyes just don't work as well as they used to.$s",
-			"Value": "Раньше я любила смотреть на облака, но я стала плохо видеть.#$e# Мое зрение уже не такое хорошее, каким оно было раньше.$s"
+			"Key": "I used to love looking at the clouds, but I have trouble seeing them these days.#$e#My eyes just don't work as well as they used to.$s",
+			"Value": "Раньше я любила смотреть на облака, но я стала плохо видеть.#$e#Мое зрение уже не такое хорошее, каким оно было раньше.$s"
 		}, {
 			"Key": "It's nice to be so close to the ocean. The sound of the sea makes going to sleep a lot easier.#$e#As kids we hunted for seashells after the tide went out. Those were the days...",
 			"Value": "Хорошо быть так близко к океану. Под звуки моря засыпать намного проще.#$e#В детстве мы охотились за ракушками после прилива. Вот были времена..."
@@ -4498,8 +4498,8 @@
 			"Key": "So, how was your first night in the old cottage?#$e#Your grandpa used to complain about the rickety old bed. But I think, deep down, he actually loved that house.",
 			"Value": "Итак, как прошла твоя первая ночь в старом коттедже?#$e#Твой дедушка обычно жаловался на покосившуюся кровать. Но я думаю, в глубине души, он любил этот дом."
 		}, {
-			"Key": "It's a good season to start thinking about gardening, even for us non-farmers.#$e# The valley is known for producing some of the finest spring flowers!$h",
-			"Value": "Это хороший сезон, чтобы занятся садоводством, даже нам, не-фермерам.#$e# Долина славится производством лучших весенних цветов!$h"
+			"Key": "It's a good season to start thinking about gardening, even for us non-farmers.#$e#The valley is known for producing some of the finest spring flowers!$h",
+			"Value": "Это хороший сезон, чтобы занятся садоводством, даже нам, не-фермерам.#$e#Долина славится производством лучших весенних цветов!$h"
 		}, {
 			"Key": "Just place anything you want to sell in the shipping box next to your house.#$e#I'll be interested in seeing what kinds of things you put in there.",
 			"Value": "Просто помести все, что ты хочешь продать в упаковочную коробку рядом с твоим домом.#$e#Мне будет интересно увидеть, какие виды вещей, ты положил туда.^Мне будет интересно увидеть, какие виды вещей, ты положила туда."
@@ -5630,7 +5630,7 @@
 			"Value": "Привет @! Ээм...Читаешь что-нибудь интересное в библиотеке в последнее время.#$e#Хех. Ну, Эм... увидимся потом?$u"
 		}, {
 			"Key": "I heard it's raining back home. Is that why you came here?$h#$e#I kind of miss the rain, actually...$s",
-			"Value": "Я слышала, как дома идет дождь. Так вот почему ты здесь?$h#$e# Я скучаю по дождю...$s"
+			"Value": "Я слышала, как дома идет дождь. Так вот почему ты здесь?$h#$e#Я скучаю по дождю...$s"
 		}, {
 			"Key": "Ah, the sewers are flowing quickly today. It'll get nice and humid in here... Just how I like it.",
 			"Value": "Ах, канализации сегодня быстро протекают. Тут станет приятно и сыро... прямо как я люблю."
@@ -6967,7 +6967,7 @@
 			"Value": "Привет, @. Не хочешь посмотреть телевизор вместе со мной?"
 		}, {
 			"Key": "My grand-pap was a farmer. It's a respectable profession.#$e#If I wasn't so darned old I'd come to your farm and show you a thing or two...",
-			"Value": "Мой дед был фермером. Это уважаемая профессия.#$e# Если бы я не был так чертовски стар, я бы пришел на твою ферму и научил бы тебя чему-нибудь..."
+			"Value": "Мой дед был фермером. Это уважаемая профессия.#$e#Если бы я не был так чертовски стар, я бы пришел на твою ферму и научил бы тебя чему-нибудь..."
 		}, {
 			"Key": "I wish my legs worked so I could play catch with Josh.$s#$e#That'll never happen.$s",
 			"Value": "Если бы мои ноги работали, я бы хотел поиграть в мяч с Джошем.$s#$e#Этого никогда не случится.$s"
@@ -7451,7 +7451,7 @@
 			"Key": "Hey! I hope you feel comfortable in our little town.",
 			"Value": "Привет! Я надеюсь, что ты чувствуешь себя комфортно в нашем маленьком городе."
 		}, {
-			"Key": "It's a good season to start thinking about gardening.#$e# I like to plant several kinds of flowers this time of year!$h",
+			"Key": "It's a good season to start thinking about gardening.#$e#I like to plant several kinds of flowers this time of year!$h",
 			"Value": "Сейчас благоприятный сезон для занятия садоводством.#$e#Мне нравится сажать несколько видов цветов в это время года!$h"
 		}, {
 			"Key": "Just place anything you want to sell in the shipping box next to your house.#$e#I'll be interested in seeing what kinds of things you put in there.",
@@ -7581,7 +7581,7 @@
 		"Name": "spring/Maru",
 		"Dialogues": [{
 			"Key": "Hi! You must be the new farmer everyone's talking about. I'm Maru.#$e#It's nice to meet you.",
-			"Value": "Привет! Ты, должно быть, новый фермер, о котором все говорят. Я Мару.#$e# Приятно познакомится."
+			"Value": "Привет! Ты, должно быть, новый фермер, о котором все говорят. Я Мару.#$e#Приятно познакомится."
 		}, {
 			"Key": "Everything seems so fresh in the spring...#$e#It's like living in a big, delicious salad bowl!$h#$e#Yes...?",
 			"Value": "Весной все кажется таким свежим...#$e#Как будто живешь в большой миске с вкусным салатом!$h#$e#Да...?"
@@ -7981,7 +7981,7 @@
 		"Name": "spring/Sebastian",
 		"Dialogues": [{
 			"Key": "Oh. Hey.#$e#I'm Sebastian.",
-			"Value": "Ох. Привет.#$e# Я Себастьян."
+			"Value": "Ох. Привет.#$e#Я Себастьян."
 		}, {
 			"Key": "Hey.#$eUm... need something?",
 			"Value": "Привет.#$eХм... что-то нужно?"
@@ -8528,7 +8528,7 @@
 			"Value": "Привет, @. Не хочешь посмотреть телевизор вместе со мной?"
 		}, {
 			"Key": "My grand-pap was a farmer. It's a respectable profession.#$e#If I wasn't so darned old I'd come to your farm and show you a thing or two...",
-			"Value": "Мой дед был фермером. Это уважаемая профессия.#$e# Если бы я не был так чертовски стар, я бы пришел на твою ферму и научил бы тебя чему-нибудь..."
+			"Value": "Мой дед был фермером. Это уважаемая профессия.#$e#Если бы я не был так чертовски стар, я бы пришел на твою ферму и научил бы тебя чему-нибудь..."
 		}, {
 			"Key": "I wish my legs worked so I could play catch with Josh.$s#$e#That'll never happen.$s",
 			"Value": "Если бы мои ноги работали, я бы хотел поиграть в мяч с Джошем.$s#$e#Этого никогда не случится.$s"
@@ -9869,7 +9869,7 @@
 			"Value": "Привет, @. Не хочешь посмотреть телевизор вместе со мной?"
 		}, {
 			"Key": "My grand-pap was a farmer. It's a respectable profession.#$e#If I wasn't so darned old I'd come to your farm and show you a thing or two...",
-			"Value": "Мой дед был фермером. Это уважаемая профессия.#$e# Если бы я не был так чертовски стар, я бы пришел на твою ферму и научил бы тебя чему-нибудь..."
+			"Value": "Мой дед был фермером. Это уважаемая профессия.#$e#Если бы я не был так чертовски стар, я бы пришел на твою ферму и научил бы тебя чему-нибудь..."
 		}, {
 			"Key": "I wish my legs worked so I could play catch with Josh.$s#$e#That'll never happen.$s",
 			"Value": "Если бы мои ноги работали, я бы хотел поиграть в мяч с Джошем.$s#$e#Этого никогда не случится.$s"
@@ -11247,7 +11247,7 @@
 			"Value": "Привет, @. Не хочешь посмотреть телевизор вместе со мной?"
 		}, {
 			"Key": "My grand-pap was a farmer. It's a respectable profession.#$e#If I wasn't so darned old I'd come to your farm and show you a thing or two...",
-			"Value": "Мой дед был фермером. Это уважаемая профессия.#$e# Если бы я не был так чертовски стар, я бы пришел на твою ферму и научил бы тебя чему-нибудь..."
+			"Value": "Мой дед был фермером. Это уважаемая профессия.#$e#Если бы я не был так чертовски стар, я бы пришел на твою ферму и научил бы тебя чему-нибудь..."
 		}, {
 			"Key": "I wish my legs worked so I could play catch with Josh.$s#$e#That'll never happen.$s",
 			"Value": "Если бы мои ноги работали, я бы хотел поиграть в мяч с Джошем.$s#$e#Этого никогда не случится.$s"

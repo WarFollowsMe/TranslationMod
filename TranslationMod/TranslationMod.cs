@@ -123,24 +123,117 @@ namespace TranslationMod
         [Subscribe]
         public void PastGameLoadedCallback(PostGameLoadedEvent @event)
         {
-            var characters = @event.Root.AllCharacters;
-            foreach (var npc in characters)
+            var dialoguesParse = JsonConvert.DeserializeObject<Dictionary<string, List<KeyValuePair<string, string>>>>(Encoding.UTF8.GetString(File.ReadAllBytes(Path.Combine(PathOnDisk, "Dialogues.json"))), new DictKeyValConverter());
+            var newdialogues = new Dictionary<string, List<KeyValuePair<string, string>>>();
+            var badCount = 0;
+            foreach (var pers in dialoguesParse)
             {
-                if (npc.Dialogue != null)
+                newdialogues.Add(pers.Key, new List<KeyValuePair<string, string>>());
+                foreach (var dialog in pers.Value)
                 {
-                    var dialogues = npc.Dialogue.AsEnumerable().ToArray();
-                    foreach (var dialog in dialogues)
+                    var key = dialog.Key;
+                    var value = dialog.Value;
+                    if (key == "__comment")
                     {
-                        if(Data.ContainsKey(npc.Name))
+                        newdialogues[pers.Key].Add(new KeyValuePair<string, string>(key, value));
+                    }
+                    else
+                    {
+                        var keyCount = key.Count(k => k == '^');
+                        var valueCount = value.Count(v => v == '^');
+                        var keyDialogues = new List<string>();
+                        var valueDialogues = new List<string>();
+                        if (keyCount == valueCount)
                         {
-                            var newValue = Data[npc.Name].Dialogues.Where(d => d.Key == dialog.Value).Select(d => d.Value).FirstOrDefault();
-                            if (!string.IsNullOrEmpty(newValue))
-                                npc.Dialogue[dialog.Key] = newValue;
+                            if (keyCount == 0)
+                            {
+                                keyDialogues = GetInstanceField(typeof(Dialogue), new Dialogue(key, new StardewValley.NPC(new StardewValley.AnimatedSprite(StormContentManager.Load<Texture2D>(Game1.content, "Characters\\Junimo"), 0, 16, 16), new Vector2(0, 0), 2, "Junimo")), "dialogues") as List<string>;
+                                valueDialogues = GetInstanceField(typeof(Dialogue), new Dialogue(value, new StardewValley.NPC(new StardewValley.AnimatedSprite(StormContentManager.Load<Texture2D>(Game1.content, "Characters\\Junimo"), 0, 16, 16), new Vector2(0, 0), 2, "Junimo")), "dialogues") as List<string>;
+                            }
+                            else
+                            {
+                                Game1.player.IsMale = true;
+                                var keyDialogues1 = GetInstanceField(typeof(Dialogue), new Dialogue(key, new StardewValley.NPC(new StardewValley.AnimatedSprite(StormContentManager.Load<Texture2D>(Game1.content, "Characters\\Junimo"), 0, 16, 16), new Vector2(0, 0), 2, "Junimo")), "dialogues") as List<string>;
+                                var valueDialogues1 = GetInstanceField(typeof(Dialogue), new Dialogue(value, new StardewValley.NPC(new StardewValley.AnimatedSprite(StormContentManager.Load<Texture2D>(Game1.content, "Characters\\Junimo"), 0, 16, 16), new Vector2(0, 0), 2, "Junimo")), "dialogues") as List<string>;
+
+                                Game1.player.IsMale = false;
+                                var keyDialogues2 = GetInstanceField(typeof(Dialogue), new Dialogue(key, new StardewValley.NPC(new StardewValley.AnimatedSprite(StormContentManager.Load<Texture2D>(Game1.content, "Characters\\Junimo"), 0, 16, 16), new Vector2(0, 0), 2, "Junimo")), "dialogues") as List<string>;
+                                var valueDialogues2 = GetInstanceField(typeof(Dialogue), new Dialogue(value, new StardewValley.NPC(new StardewValley.AnimatedSprite(StormContentManager.Load<Texture2D>(Game1.content, "Characters\\Junimo"), 0, 16, 16), new Vector2(0, 0), 2, "Junimo")), "dialogues") as List<string>;
+
+                                for (var i = 0; i < valueDialogues1.Count; i++)
+                                {
+                                    if (keyDialogues1[i] == keyDialogues2[i])
+                                        keyDialogues.Add(keyDialogues1[i]);
+                                    else
+                                    {
+                                        keyDialogues.Add(keyDialogues1[i]);
+                                        keyDialogues.Add(keyDialogues2[i]);
+                                    }
+                                }
+
+                                for (var i = 0; i < valueDialogues1.Count; i++)
+                                {
+                                    if (valueDialogues1[i] == valueDialogues2[i])
+                                        valueDialogues.Add(valueDialogues1[i]);
+                                    else
+                                    {
+                                        valueDialogues.Add(valueDialogues1[i]);
+                                        valueDialogues.Add(valueDialogues2[i]);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (keyCount == 0)
+                            {
+                                Game1.player.IsMale = true;
+                                keyDialogues = GetInstanceField(typeof(Dialogue), new Dialogue(key, new StardewValley.NPC(new StardewValley.AnimatedSprite(StormContentManager.Load<Texture2D>(Game1.content, "Characters\\Junimo"), 0, 16, 16), new Vector2(0, 0), 2, "Junimo")), "dialogues") as List<string>;
+                                var valueDialogues1 = GetInstanceField(typeof(Dialogue), new Dialogue(value, new StardewValley.NPC(new StardewValley.AnimatedSprite(StormContentManager.Load<Texture2D>(Game1.content, "Characters\\Junimo"), 0, 16, 16), new Vector2(0, 0), 2, "Junimo")), "dialogues") as List<string>;
+
+                                Game1.player.IsMale = false;
+                                var valueDialogues2 = GetInstanceField(typeof(Dialogue), new Dialogue(value, new StardewValley.NPC(new StardewValley.AnimatedSprite(StormContentManager.Load<Texture2D>(Game1.content, "Characters\\Junimo"), 0, 16, 16), new Vector2(0, 0), 2, "Junimo")), "dialogues") as List<string>;
+
+                                for (var i = 0; i < valueDialogues1.Count; i++)
+                                {
+                                    if (valueDialogues1[i] == valueDialogues2[i])
+                                        valueDialogues.Add(valueDialogues1[i]);
+                                    else
+                                    {
+                                        valueDialogues.Add(valueDialogues1[i] + "^" + valueDialogues2[i]);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                badCount++;
+                                if (!newdialogues.ContainsKey("BAD"))
+                                    newdialogues.Add("BAD", new List<KeyValuePair<string, string>>());
+                                newdialogues["BAD"].Add(new KeyValuePair<string, string>(key, value));
+                            }
+                        }
+
+                        for (var i = 0; i < keyDialogues.Count; i++)
+                        {                            
+                            if (valueDialogues.Count > i)
+                            {
+                                newdialogues[pers.Key].Add(new KeyValuePair<string, string>(keyDialogues[i], valueDialogues[i]));
+                            }
+                            else if(string.IsNullOrEmpty(value))
+                            {
+                                newdialogues[pers.Key].Add(new KeyValuePair<string, string>(keyDialogues[i], ""));
+                            }
+                            else
+                            {
+                                if (!newdialogues.ContainsKey("MIISTAKE"))
+                                    newdialogues.Add("MIISTAKE", new List<KeyValuePair<string, string>>());
+                                newdialogues["MIISTAKE"].Add(new KeyValuePair<string, string>(key, value));
+                            }
                         }
                     }
                 }
             }
-            
+            File.WriteAllText(Path.Combine(PathOnDisk, "NewDialogues.json"), JsonConvert.SerializeObject(newdialogues, new KeyValConverter()), UTF8Encoding.UTF8);
         }
 
         [Subscribe]
@@ -154,8 +247,6 @@ namespace TranslationMod
         {
             if(ModConfig.LanguageName != "EN")
             {
-                //ЗДЕСЬ АЛГОРИТМ ГЕНЕРАЦИИ ИМЕН НА РУССКОМ!
-                //Возвращаемый объект - string
                 @event.ReturnValue = randomName();
                 @event.ReturnEarly = true;
             }
@@ -166,8 +257,6 @@ namespace TranslationMod
         {
             if (ModConfig.LanguageName != "EN")
             {
-                //ЗДЕСЬ АЛГОРИТМ ГЕНЕРАЦИИ СПИСКА ИМЕН ФЕРМЕРОВ НА РУССКОМ!
-                //Возвращаемый объект - List<string>
                 @event.ReturnValue = getOtherFarmerNames();
                 @event.ReturnEarly = true;
             }
@@ -177,38 +266,41 @@ namespace TranslationMod
         [Subscribe]
         public void OnSetNewDialgue(SetNewDialogueEvent @event)
         {
-            var npc = @event.NPC;
-            var dialogue = "";
-            var original = "";
-            if (string.IsNullOrEmpty(@event.Dialogue))
+            if (ModConfig.LanguageName != "EN")
             {
-                if (!@event.Add) @event.NPC.CurrentDialogue.Clear();
-                var content = StormContentManager.Load<Dictionary<string, string>>(@event.Root.Content,
-                    "Characters\\Dialogue\\" + @event.DialogueSheetName);
-                string str = @event.NumberToAppend == -1 ? npc.Name : "";
-                string key = @event.DialogueSheetKey + (@event.NumberToAppend != -1 ?
-                    string.Concat(@event.NumberToAppend) :
-                    "") + str;
-                if (!content.ContainsKey(key)) return;
-                else
+                var npc = @event.NPC;
+                var dialogue = "";
+                var original = "";
+                if (string.IsNullOrEmpty(@event.Dialogue))
                 {
-                    original = content[key];
+                    if (!@event.Add) @event.NPC.CurrentDialogue.Clear();
+                    var content = StormContentManager.Load<Dictionary<string, string>>(@event.Root.Content,
+                        "Characters\\Dialogue\\" + @event.DialogueSheetName);
+                    string str = @event.NumberToAppend == -1 ? npc.Name : "";
+                    string key = @event.DialogueSheetKey + (@event.NumberToAppend != -1 ?
+                        string.Concat(@event.NumberToAppend) :
+                        "") + str;
+                    if (!content.ContainsKey(key)) return;
+                    else
+                    {
+                        original = content[key];
+                    }
                 }
+                else original = @event.Dialogue;
+                if (Data.ContainsKey(npc.Name))
+                {
+                    var newValue = Data[npc.Name].Dialogues.Where(d => d.Key == original).Select(d => d.Value).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(newValue))
+                        dialogue = newValue;
+                }
+                else if ((dialogue = Translate(@event.Dialogue)) != "") { }
+                else dialogue = original;
+                ((StardewValley.NPC)@event.NPC.Underlying).CurrentDialogue.Push(new Dialogue(dialogue, (StardewValley.NPC)@event.NPC.Underlying)
+                {
+                    removeOnNextMove = @event.ClearOnMovement
+                });
+                @event.ReturnEarly = true;
             }
-            else original = @event.Dialogue;
-            if (Data.ContainsKey(npc.Name))
-            {
-                var newValue = Data[npc.Name].Dialogues.Where(d => d.Key == original).Select(d => d.Value).FirstOrDefault();
-                if (!string.IsNullOrEmpty(newValue))
-                    dialogue = newValue;
-            }
-            else if ((dialogue = Translate(@event.Dialogue)) != "") { }
-            else dialogue = original;
-            ((StardewValley.NPC)@event.NPC.Underlying).CurrentDialogue.Push(new Dialogue(dialogue, (StardewValley.NPC)@event.NPC.Underlying)
-            {
-                removeOnNextMove = @event.ClearOnMovement
-            });
-            @event.ReturnEarly = true;
         }
 
         [Subscribe]
@@ -245,84 +337,96 @@ namespace TranslationMod
         [Subscribe]
         public void OnGetWidthSpriteText(SpriteTextGetWidthOfStringEvent @event)
         {
-            if (IsTranslated > 0)
+            if(ModConfig.LanguageName != "EN")
             {
-                IsTranslated = 0;
-                return;
-            }
-            var translateMessage = Translate(@event.Text);
+                if (IsTranslated > 0)
+                {
+                    IsTranslated = 0;
+                    return;
+                }
+                var translateMessage = Translate(@event.Text);
 
-            if (!string.IsNullOrEmpty(translateMessage))
-            {
-                IsTranslated++;
-                @event.Text = translateMessage;
-                @event.ReturnValue = @event.Root.GetWidthOfString(translateMessage);
-                @event.ReturnEarly = true;
-            }
-            else if (Characters.ContainsKey(@event.Text))
-            {
-                IsTranslated++;
-                @event.Text = Characters[@event.Text];
-                @event.ReturnValue = @event.Root.GetWidthOfString(@event.Text);
-                @event.ReturnEarly = true;
+                if (!string.IsNullOrEmpty(translateMessage))
+                {
+                    IsTranslated++;
+                    @event.Text = translateMessage;
+                    @event.ReturnValue = @event.Root.GetWidthOfString(translateMessage);
+                    @event.ReturnEarly = true;
+                }
+                else if (Characters.ContainsKey(@event.Text))
+                {
+                    IsTranslated++;
+                    @event.Text = Characters[@event.Text];
+                    @event.ReturnValue = @event.Root.GetWidthOfString(@event.Text);
+                    @event.ReturnEarly = true;
+                }
             }
         }
 
         [Subscribe]
         public void OnSpriteBatchDrawString(SpriteBatchDrawStringEvent @event)
         {
-            var translateMessage = Translate(@event.Message);
-            if (!string.IsNullOrEmpty(translateMessage))
+            if (ModConfig.LanguageName != "EN")
             {
-                @event.ReturnValue = translateMessage;
+                var translateMessage = Translate(@event.Message);
+                if (!string.IsNullOrEmpty(translateMessage))
+                {
+                    @event.ReturnValue = translateMessage;
+                }
+            }
+        }
+
+        [Subscribe]
+        public void OnSpriteFontMeasureString(SpriteFontMeasureStringEvent @event)
+        {
+            if (ModConfig.LanguageName != "EN")
+            {
+                if (reToSkip.IsMatch(@event.Message) || string.IsNullOrEmpty(@event.Message))
+                    return;
+                var translateMessage = Translate(@event.Message);
+                if (!string.IsNullOrEmpty(translateMessage))
+                {
+                    @event.ReturnValue = translateMessage;
+                }
             }
         }
 
         [Subscribe]
         public void OnParseText(ParseTextEvent @event)
         {
-            var text = @event.Text;
-            if (Environment.NewLine != "\n" && @event.Text.Contains("\n") && !@event.Text.Contains(Environment.NewLine))
-                text = @event.Text.Replace("\n", Environment.NewLine);
-            var translateMessage = Translate(@event.Text);
-            if (!string.IsNullOrEmpty(translateMessage))
+            if (ModConfig.LanguageName != "EN")
             {
-                text = translateMessage;
-            }
-            var whichFont = @event.WhichFont;
-            var width = @event.Width;
-
-            if (text == null)
-            {
-                @event.ReturnValue = "";
-                return;
-            }
-            string str1 = string.Empty;
-            string str2 = string.Empty;
-            string str3 = text;
-            foreach (string str4 in str3.Split(' '))
-            {
-                if (whichFont.MeasureString(str1 + str4).Length() > width ||
-                    str4.Equals(Environment.NewLine))
+                var text = @event.Text;
+                if (Environment.NewLine != "\n" && @event.Text.Contains("\n") && !@event.Text.Contains(Environment.NewLine))
+                    text = @event.Text.Replace("\n", Environment.NewLine);
+                var translateMessage = Translate(@event.Text);
+                if (!string.IsNullOrEmpty(translateMessage))
                 {
-                    str2 = str2 + str1 + Environment.NewLine;
-                    str1 = string.Empty;
+                    text = translateMessage;
                 }
-                str1 = str1 + str4 + " ";
-            }
-            @event.ReturnValue = str2 + str1;
-            @event.ReturnEarly = true;
-        }
+                var whichFont = @event.WhichFont;
+                var width = @event.Width;
 
-        [Subscribe]
-        public void OnSpriteFontMeasureString(SpriteFontMeasureStringEvent @event)
-        {
-            if (reToSkip.IsMatch(@event.Message) || string.IsNullOrEmpty(@event.Message))
-                return;
-            var translateMessage = Translate(@event.Message);
-            if (!string.IsNullOrEmpty(translateMessage))
-            {
-                @event.ReturnValue = translateMessage;
+                if (text == null)
+                {
+                    @event.ReturnValue = "";
+                    return;
+                }
+                string str1 = string.Empty;
+                string str2 = string.Empty;
+                string str3 = text;
+                foreach (string str4 in str3.Split(' '))
+                {
+                    if (whichFont.MeasureString(str1 + str4).Length() > width ||
+                        str4.Equals(Environment.NewLine))
+                    {
+                        str2 = str2 + str1 + Environment.NewLine;
+                        str1 = string.Empty;
+                    }
+                    str1 = str1 + str4 + " ";
+                }
+                @event.ReturnValue = str2 + str1;
+                @event.ReturnEarly = true;
             }
         }
 
@@ -439,7 +543,7 @@ namespace TranslationMod
             string result = format;
             MatchCollection matches;
             int i = 0;
-            while ((matches = Regex.Matches(result, "@key[RDVTP]{0,1}|@number|@farm|@player")).Count != 0)
+            while ((matches = Regex.Matches(result, "@key[RDVTP]{0,1}|@number|@farm|@player|@playerChild")).Count != 0)
             {
                 var value = args[i];
                 if (matches[0].Value.Contains("@key"))
@@ -448,7 +552,6 @@ namespace TranslationMod
                         format == "@key" + Environment.NewLine + Environment.NewLine + "@key" + Environment.NewLine + Environment.NewLine + "@key"
                         && value.Contains(Environment.NewLine))
                     {
-                        //Console.WriteLine("hey");
                         string newValue = "";
                         foreach (var item in value.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
                         {
@@ -457,7 +560,6 @@ namespace TranslationMod
                         value = newValue.Substring(0, newValue.Length - Environment.NewLine.Length);
                     }
                     else {
-                        //value = Translate(value); //Тут переводит ключ!!!
                         var tmp = Translate(value);
                         if (!string.IsNullOrEmpty(tmp))
                             value = tmp;
@@ -526,6 +628,10 @@ namespace TranslationMod
                             }
                         }
                     }
+                    else if (dictName == "Items")
+                    {
+
+                    }
                     else if (dictName == "MainDictionary.json")
                     {
                         Data = JsonConvert.DeserializeObject<Dictionary<string, Person>>(Encoding.UTF8.GetString(File.ReadAllBytes(dict)));
@@ -589,7 +695,7 @@ namespace TranslationMod
                             {
                                 foreach (var row in pair.Value.Dialogues)
                                 {
-                                    
+
                                     AddPairToDictFromIndex(row.Key, row.Value, _mainDictionary, 1); // name
                                     AddPairToDictFromIndex(row.Key, row.Value, _mainDictionary, 2); // desc
                                     AddPairToDictFromIndex(row.Key, row.Value, _mainDictionary, 3); // goal
@@ -601,7 +707,7 @@ namespace TranslationMod
                     else if (dictName == "Characters.json")
                     {
                         Characters = JsonConvert.DeserializeObject<Dictionary<string, string>>(Encoding.UTF8.GetString(File.ReadAllBytes(dict)));
-                        foreach(var pair in Characters)
+                        foreach (var pair in Characters)
                             AddPairToDict(pair.Key, pair.Value.ToString(), _mainDictionary);
                     }
                     else if (dictName == "nameGen.json")
@@ -613,10 +719,10 @@ namespace TranslationMod
                         var jo = JObject.Parse(Encoding.UTF8.GetString(File.ReadAllBytes(dict)).Replace("@newline", Environment.NewLine)); //.Replace(" @newline ", Environment.NewLine)
                         foreach (var pair in jo)
                         {
-                            if(pair.Key.Contains("@"))
+                            if (pair.Key.Contains("@"))
                             {
                                 if (!_fuzzyDictionary.ContainsKey(pair.Key))
-                                    _fuzzyDictionary.Add(pair.Key,pair.Value.ToString());
+                                    _fuzzyDictionary.Add(pair.Key, pair.Value.ToString());
                                 else if (_fuzzyDictionary[pair.Key] == "" && pair.Value.ToString() != "")
                                     _fuzzyDictionary[pair.Key] = pair.Value.ToString();
                             }
@@ -1138,6 +1244,14 @@ namespace TranslationMod
             int num = (int)c - 32;
             return new Rectangle(num * 8 % SpriteText.spriteTexture.Width, num * 8 / SpriteText.spriteTexture.Width * 16 + (junimoText ? 96 : 0), 8, 16);
         }
+
+        private object GetInstanceField(Type type, object instance, string fieldName)
+        {
+            BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
+                | BindingFlags.Static;
+            FieldInfo field = type.GetField(fieldName, bindFlags);
+            return field.GetValue(instance);
+        }
     }
 
     public class Person
@@ -1149,5 +1263,98 @@ namespace TranslationMod
     public class Config
     {
         public string LanguageName { get; set; }
+    }
+
+    public class KeyValConverter : JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            var list = value as List<KeyValuePair<string, string>>;
+            //writer.WriteStartArray();
+            writer.WriteStartObject();
+            foreach (var item in list)
+            {
+                writer.WritePropertyName(item.Key);
+                writer.WriteValue(item.Value);
+            }
+            writer.WriteEndObject();
+            //writer.WriteEndArray();
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            //var token = JToken.Load(reader);
+            var result = new List<KeyValuePair<string, string>>();
+
+            while (reader.Read() && !string.IsNullOrEmpty(reader.Path))
+            {
+                result.Add(new KeyValuePair<string, string>(reader.Value.ToString(), reader.ReadAsString()));
+            }
+
+            //foreach(var t in token)
+            //{
+            //    result.Add(new KeyValuePair<string, string>((t as JProperty).Name, (t as JProperty).Value.ToString()));
+            //}
+
+            return result;
+            // TODO...
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(List<KeyValuePair<string, string>>);
+        }
+    }
+    public class DictKeyValConverter : JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            var dict = value as Dictionary<string, List<KeyValuePair<string, string>>>;
+            //var list = value as List<KeyValuePair<string, string>>;
+            //writer.WriteStartArray();
+            foreach (var d in dict)
+            {
+                writer.WriteStartObject();
+                writer.WritePropertyName(d.Key);
+                writer.WriteValue(d.Value);
+                //foreach (var item in d.Value)
+                //{
+                //    writer.WritePropertyName(item.Key);
+                //    writer.WriteValue(item.Value);
+                //}
+                writer.WriteEndObject();
+            }
+            //writer.WriteEndArray();
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            var result = new Dictionary<string, List<KeyValuePair<string, string>>>();
+
+            while (reader.Read() && !string.IsNullOrEmpty(reader.Path))
+            {
+                var propertyName = "";
+                if (reader.TokenType == JsonToken.PropertyName)
+                {
+                    propertyName = reader.Value.ToString();
+                    result.Add(propertyName, new List<KeyValuePair<string, string>>());
+                }
+                reader.Read();
+                if (reader.TokenType == JsonToken.StartObject)
+                {
+                    while (reader.Read() && reader.TokenType != JsonToken.EndObject)
+                    {
+                        result[propertyName].Add(new KeyValuePair<string, string>(reader.Value.ToString(), reader.ReadAsString()));
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(Dictionary<string, List<KeyValuePair<string, string>>>);
+        }
     }
 }
