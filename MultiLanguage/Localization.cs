@@ -75,58 +75,54 @@ namespace MultiLanguage
                     {
                         currentName = Game1.player.Name;
                         KeyReplace(Game1.player.Name, Game1.player.farmName);
-                        //foreach (var pair in _dialogues)
-                        //{
-                        //    if (pair.Key.Contains("In fact, I've"))
-                        //    {
-
-                        //    }
-                        //    if (!pair.Key.Contains("@"))
-                        //    {
-                        //        var width = 1200;
-                        //        var widthLimit = width - 120 * Game1.pixelZoom;
-                        //        var height = SpriteText.getHeightOfString(pair.Key, widthLimit);
-                        //        var keyWidth = getWidthOfString(pair.Key);
-                        //        var keyPart1 = "";
-                        //        var keyPart2 = "";
-                        //        if (keyWidth >= widthLimit * 6)
-                        //        {
-                        //            var subval = SpriteText.getSubstringBeyondHeight(pair.Key, widthLimit, height - Game1.pixelZoom * 3);
-                        //            if (subval.Length > 0 && pair.Key.Length > subval.Length)
-                        //            {
-                        //                keyPart1 = pair.Key.Replace(subval, "");
-                        //                keyPart2 = subval.Trim();
-                        //            }
-
-                        //            var value = pair.Value;
-                        //            if (value.Contains("^"))
-                        //            {
-                        //                if (Game1.player.IsMale)
-                        //                {
-                        //                    value = value.Split('^')[0];
-                        //                }
-                        //                else value = value.Split('^')[1];
-                        //            }
-                        //            height = SpriteText.getHeightOfString(value, widthLimit);
-                        //            var valueWidth = getWidthOfString(pair.Key);
-                        //            var valuePart1 = "";
-                        //            var valuePart2 = "";
-                        //            if (valueWidth >= widthLimit * 6)
-                        //            {
-                        //                var subval2 = SpriteText.getSubstringBeyondHeight(pair.Key, widthLimit, height - Game1.pixelZoom * 3);
-                        //                if (subval2.Length > 0 && pair.Key.Length > subval2.Length)
-                        //                {
-                        //                    valuePart1 = pair.Key.Replace(subval2, "");
-                        //                    valuePart2 = subval2.Trim();
-                        //                }
-                        //            }
-                        //            _fuzzyDictionary.Remove(pair.Key);
-                        //            _fuzzyDictionary.Add(keyPart1, valuePart1);
-                        //            _fuzzyDictionary.Add(keyPart2, valuePart2);
-                        //        }
-                        //    }
-                        //}
-                        //File.WriteAllText("bigDialogues", JsonConvert.SerializeObject(bigKeys), Encoding.UTF8);
+                        Dictionary<string, List<string>> bigD = new Dictionary<string, List<string>>();
+                        foreach (var pair in _dialogues)
+                        {
+                            if (!pair.Key.Contains("@"))
+                            {
+                                var width = 1200;
+                                var widthLimit = width - 115 * 4 - 5 * 4;
+                                var height = 430;
+                                var keyWidth = getWidthOfString(pair.Key);
+                                var keyPart1 = "";
+                                var keyPart2 = "";
+                                if (keyWidth >= widthLimit * 6)
+                                {
+                                    var subval = getSubstringBeyondHeight(pair.Key, widthLimit, height - 4 * 3);
+                                    if (subval.Length > 0 && pair.Key.Length > subval.Length)
+                                    {
+                                        keyPart1 = pair.Key.Replace(subval, "");
+                                        keyPart2 = subval.Trim();
+                                        bigD.Add(pair.Key, new List<string>() { keyPart1, keyPart2 });
+                                    }
+                                    //var value = pair.Value;
+                                    //if (value.Contains("^"))
+                                    //{
+                                    //    if (Game1.player.IsMale)
+                                    //    {
+                                    //        value = value.Split('^')[0];
+                                    //    }
+                                    //    else value = value.Split('^')[1];
+                                    //}
+                                    //var valueWidth = getWidthOfString(pair.Key);
+                                    //var valuePart1 = "";
+                                    //var valuePart2 = "";
+                                    //if (valueWidth >= widthLimit * 6)
+                                    //{
+                                    //    var subval2 = SpriteText.getSubstringBeyondHeight(pair.Key, widthLimit, height - Game1.pixelZoom * 3);
+                                    //    if (subval2.Length > 0 && pair.Key.Length > subval2.Length)
+                                    //    {
+                                    //        valuePart1 = pair.Key.Replace(subval2, "");
+                                    //        valuePart2 = subval2.Trim();
+                                    //    }
+                                    //}
+                                    //_fuzzyDictionary.Remove(pair.Key);
+                                    //_fuzzyDictionary.Add(keyPart1, valuePart1);
+                                    //_fuzzyDictionary.Add(keyPart2, valuePart2);
+                                }
+                            }
+                        }
+                        File.WriteAllText("bigDialogues", JsonConvert.SerializeObject(bigD), Encoding.UTF8);
                     } else
                     {
                         _currentUpdate++;
@@ -1295,65 +1291,65 @@ namespace MultiLanguage
             return num * 3;
         }
 
-        //public string getSubstringBeyondHeight(string s, int width, int height)
-        //{
-        //    Vector2 x = new Vector2();
-        //    int num = 0;
-        //    s = s.Replace(Environment.NewLine, "");
-        //    for (int i = 0; i < s.Length; i++)
-        //    {
-        //        if (s[i] != '\u005E')
-        //        {
-        //            if (i > 0)
-        //            {
-        //                x.X = x.X + 8 * SpriteText.fontPixelZoom + num + SpriteText.getWidthOffsetForChar(s[i]) + SpriteText.getWidthOffsetForChar(s[i - 1]) * SpriteText.fontPixelZoom;
-        //            }
-        //            int num1 = SpriteText.fontPixelZoom;
-        //            num = 0;
-        //            if (positionOfNextSpace(s, i, Convert.ToInt32(x.X), num) >= width)
-        //            {
-        //                x.Y = x.Y + 18 * SpriteText.fontPixelZoom;
-        //                num = 0;
-        //                x.X = 0f;
-        //            }
-        //            if (x.Y >= height - 16 * SpriteText.fontPixelZoom * 2)
-        //            {
-        //                return s.Substring(getLastSpace(s, i));
-        //            }
-        //        }
-        //        else
-        //        {
-        //            x.Y = x.Y + (float)(18 * SpriteText.fontPixelZoom);
-        //            x.X = 0f;
-        //            num = 0;
-        //        }
-        //    }
-        //    return "";
-        //}
-        //private int getLastSpace(string s, int startIndex)
-        //{
-        //    for (int i = startIndex; i >= 0; i--)
-        //    {
-        //        if (s[i] == ' ')
-        //        {
-        //            return i;
-        //        }
-        //    }
-        //    return startIndex;
-        //}
-        //public int positionOfNextSpace(string s, int index, int currentXPosition, int accumulatedHorizontalSpaceBetweenCharacters)
-        //{
-        //    for (int i = index; i < s.Length; i++)
-        //    {
-        //        if (s[i] == ' ')
-        //        {
-        //            return currentXPosition;
-        //        }
-        //        currentXPosition = currentXPosition + 8 * SpriteText.fontPixelZoom + accumulatedHorizontalSpaceBetweenCharacters + (getWidthOffsetForChar(s[i]) + getWidthOffsetForChar(s[Math.Max(0, i - 1)])) * SpriteText.fontPixelZoom;
-        //        int num = SpriteText.fontPixelZoom;
-        //        accumulatedHorizontalSpaceBetweenCharacters = 0;
-        //    }
-        //    return currentXPosition;
-        //}
+        public string getSubstringBeyondHeight(string s, int width, int height)
+        {
+            Vector2 x = new Vector2();
+            int num = 0;
+            s = s.Replace(Environment.NewLine, "");
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] != '\u005E')
+                {
+                    if (i > 0)
+                    {
+                        x.X = x.X + 8 * SpriteText.fontPixelZoom + num + SpriteText.getWidthOffsetForChar(s[i]) + SpriteText.getWidthOffsetForChar(s[i - 1]) * SpriteText.fontPixelZoom;
+                    }
+                    int num1 = SpriteText.fontPixelZoom;
+                    num = 0;
+                    if (positionOfNextSpace(s, i, Convert.ToInt32(x.X), num) >= width)
+                    {
+                        x.Y = x.Y + 18 * SpriteText.fontPixelZoom;
+                        num = 0;
+                        x.X = 0f;
+                    }
+                    if (x.Y >= height - 16 * SpriteText.fontPixelZoom * 2)
+                    {
+                        return s.Substring(getLastSpace(s, i));
+                    }
+                }
+                else
+                {
+                    x.Y = x.Y + (float)(18 * SpriteText.fontPixelZoom);
+                    x.X = 0f;
+                    num = 0;
+                }
+            }
+            return "";
+        }
+        private int getLastSpace(string s, int startIndex)
+        {
+            for (int i = startIndex; i >= 0; i--)
+            {
+                if (s[i] == ' ')
+                {
+                    return i;
+                }
+            }
+            return startIndex;
+        }
+        public int positionOfNextSpace(string s, int index, int currentXPosition, int accumulatedHorizontalSpaceBetweenCharacters)
+        {
+            for (int i = index; i < s.Length; i++)
+            {
+                if (s[i] == ' ')
+                {
+                    return currentXPosition;
+                }
+                currentXPosition = currentXPosition + 8 * SpriteText.fontPixelZoom + accumulatedHorizontalSpaceBetweenCharacters + (getWidthOffsetForChar(s[i]) + getWidthOffsetForChar(s[Math.Max(0, i - 1)])) * SpriteText.fontPixelZoom;
+                int num = SpriteText.fontPixelZoom;
+                accumulatedHorizontalSpaceBetweenCharacters = 0;
+            }
+            return currentXPosition;
+        }
     }
 }
