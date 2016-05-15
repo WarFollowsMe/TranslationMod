@@ -26,6 +26,7 @@ namespace MultiLanguage
         private JObject _dataRandName { get; set; }
         private Dictionary<string, int> _languages;
         private Dictionary<string, string> _languageDescriptions;
+        private Dictionary<string, string> _dialogues;
         private FuzzyStringDictionary _fuzzyDictionary;
         private string _currentLanguage;
         private bool _isMenuDrawing;
@@ -74,6 +75,58 @@ namespace MultiLanguage
                     {
                         currentName = Game1.player.Name;
                         KeyReplace(Game1.player.Name, Game1.player.farmName);
+                        //foreach (var pair in _dialogues)
+                        //{
+                        //    if (pair.Key.Contains("In fact, I've"))
+                        //    {
+
+                        //    }
+                        //    if (!pair.Key.Contains("@"))
+                        //    {
+                        //        var width = 1200;
+                        //        var widthLimit = width - 120 * Game1.pixelZoom;
+                        //        var height = SpriteText.getHeightOfString(pair.Key, widthLimit);
+                        //        var keyWidth = getWidthOfString(pair.Key);
+                        //        var keyPart1 = "";
+                        //        var keyPart2 = "";
+                        //        if (keyWidth >= widthLimit * 6)
+                        //        {
+                        //            var subval = SpriteText.getSubstringBeyondHeight(pair.Key, widthLimit, height - Game1.pixelZoom * 3);
+                        //            if (subval.Length > 0 && pair.Key.Length > subval.Length)
+                        //            {
+                        //                keyPart1 = pair.Key.Replace(subval, "");
+                        //                keyPart2 = subval.Trim();
+                        //            }
+
+                        //            var value = pair.Value;
+                        //            if (value.Contains("^"))
+                        //            {
+                        //                if (Game1.player.IsMale)
+                        //                {
+                        //                    value = value.Split('^')[0];
+                        //                }
+                        //                else value = value.Split('^')[1];
+                        //            }
+                        //            height = SpriteText.getHeightOfString(value, widthLimit);
+                        //            var valueWidth = getWidthOfString(pair.Key);
+                        //            var valuePart1 = "";
+                        //            var valuePart2 = "";
+                        //            if (valueWidth >= widthLimit * 6)
+                        //            {
+                        //                var subval2 = SpriteText.getSubstringBeyondHeight(pair.Key, widthLimit, height - Game1.pixelZoom * 3);
+                        //                if (subval2.Length > 0 && pair.Key.Length > subval2.Length)
+                        //                {
+                        //                    valuePart1 = pair.Key.Replace(subval2, "");
+                        //                    valuePart2 = subval2.Trim();
+                        //                }
+                        //            }
+                        //            _fuzzyDictionary.Remove(pair.Key);
+                        //            _fuzzyDictionary.Add(keyPart1, valuePart1);
+                        //            _fuzzyDictionary.Add(keyPart2, valuePart2);
+                        //        }
+                        //    }
+                        //}
+                        //File.WriteAllText("bigDialogues", JsonConvert.SerializeObject(bigKeys), Encoding.UTF8);
                     } else
                     {
                         _currentUpdate++;
@@ -141,6 +194,9 @@ namespace MultiLanguage
         public void OnGameLoaded()
         {
             _isGameLoaded = true;
+
+
+
         }
 
         public string OnGetRandomName()
@@ -556,6 +612,8 @@ namespace MultiLanguage
         {
             if (key != "__comment")
             {
+                var fKey = key.Trim();
+                var fvalue = value;
                 _fuzzyDictionary.Add(key.Trim(), value);
             }
         }
@@ -1032,6 +1090,7 @@ namespace MultiLanguage
 
         private void LoadDictionary()
         {
+            _dialogues = new Dictionary<string, string>();
             _memoryBuffer = new Dictionary<string, string>();
             _translatedStrings = new List<string>();
             _languages = new Dictionary<string, int>();
@@ -1050,6 +1109,7 @@ namespace MultiLanguage
             var dictionariesFolder = Path.Combine(PathOnDisk, "languages", Config.LanguageName, "dictionaries");
             if (Directory.Exists(dictionariesFolder) && Directory.GetFiles(dictionariesFolder).Count() > 0)
             {
+                var bigKeys = new List<string>();
                 foreach (var dict in Directory.GetFiles(dictionariesFolder))
                 {
                     var dictName = Path.GetFileName(dict);
@@ -1061,11 +1121,26 @@ namespace MultiLanguage
                             var pair = JObject.Parse(val.Value.ToString());
                             foreach (var row in pair)
                             {
+                                if (row.Key != "__comment" && !_dialogues.ContainsKey(row.Key.Trim()))
+                                {
+                                    _dialogues.Add(row.Key.Trim(), row.Value.ToString());
+                                }
                                 AddToDictionary(row.Key, row.Value.ToString());
                             }
                         }
                     }
-                    if (dictName == "Items.json")
+                    else if (dictName == "Events.json" || dictName == "Festivals.json" || dictName == "schedules.json" ||
+                        dictName == "NPCGiftTastes.json" || dictName == "EngagementDialogue.json")
+                    {
+                        var jo = JObject.Parse(Encoding.UTF8.GetString(File.ReadAllBytes(dict)));
+                        foreach (var val in jo)
+                        {
+                            if (val.Key != "__comment" && !_dialogues.ContainsKey(val.Key.Trim()))
+                                _dialogues.Add(val.Key.Trim(), val.Value.ToString());
+                            AddToDictionary(val.Key, val.Value.ToString());
+                        }
+                    }
+                    else if (dictName == "Items.json")
                     {
                         var jo = JObject.Parse(Encoding.UTF8.GetString(File.ReadAllBytes(dict)));
                         foreach (var val in jo)
@@ -1085,10 +1160,8 @@ namespace MultiLanguage
                             AddToDictionary(pair.Key, pair.Value);
                         }
                     }
-                    else if (dictName == "Achievements.json" || dictName == "animationDescription.json" || dictName == "EngagementDialogue.json" ||
-                        dictName == "Events.json" || dictName == "Festivals.json" ||
+                    else if (dictName == "Achievements.json" || dictName == "animationDescription.json"  ||
                         dictName == "Mails.json" || dictName == "Quests.json" ||
-                        dictName == "NPCGiftTastes.json"  || dictName == "schedules.json" ||
                         dictName == "TV.json")
                     {
                         var jo = JObject.Parse(Encoding.UTF8.GetString(File.ReadAllBytes(dict)));
@@ -1153,5 +1226,134 @@ namespace MultiLanguage
                 cyrPhrase = new CyrPhrase(collection, adjectives);
             }
         }
+
+        public int getWidthOffsetForChar(char c)
+        {
+            char chr = c;
+            if (chr > '$')
+            {
+                switch (chr)
+                {
+                    case ',':
+                    case '.':
+                        {
+                            return -2;
+                        }
+                    case '-':
+                        {
+                            break;
+                        }
+                    default:
+                        {
+                            if (chr == '\u005E')
+                            {
+                                return -8;
+                            }
+                            switch (chr)
+                            {
+                                case 'i':
+                                    {
+                                        return -2;
+                                    }
+                                case 'j':
+                                case 'l':
+                                    {
+                                        return -1;
+                                    }
+                            }
+                            break;
+                        }
+                }
+            }
+            else
+            {
+                if (chr == '!')
+                {
+                    return -1;
+                }
+                if (chr == '$')
+                {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        public int getWidthOfString(string s)
+        {
+            int widthOffsetForChar = 0;
+            int num = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                widthOffsetForChar = widthOffsetForChar + 8 + getWidthOffsetForChar(s[i]);
+                num = Math.Max(widthOffsetForChar, num);
+                if (s[i] == '\u005E')
+                {
+                    widthOffsetForChar = 0;
+                }
+            }
+            return num * 3;
+        }
+
+        //public string getSubstringBeyondHeight(string s, int width, int height)
+        //{
+        //    Vector2 x = new Vector2();
+        //    int num = 0;
+        //    s = s.Replace(Environment.NewLine, "");
+        //    for (int i = 0; i < s.Length; i++)
+        //    {
+        //        if (s[i] != '\u005E')
+        //        {
+        //            if (i > 0)
+        //            {
+        //                x.X = x.X + 8 * SpriteText.fontPixelZoom + num + SpriteText.getWidthOffsetForChar(s[i]) + SpriteText.getWidthOffsetForChar(s[i - 1]) * SpriteText.fontPixelZoom;
+        //            }
+        //            int num1 = SpriteText.fontPixelZoom;
+        //            num = 0;
+        //            if (positionOfNextSpace(s, i, Convert.ToInt32(x.X), num) >= width)
+        //            {
+        //                x.Y = x.Y + 18 * SpriteText.fontPixelZoom;
+        //                num = 0;
+        //                x.X = 0f;
+        //            }
+        //            if (x.Y >= height - 16 * SpriteText.fontPixelZoom * 2)
+        //            {
+        //                return s.Substring(getLastSpace(s, i));
+        //            }
+        //        }
+        //        else
+        //        {
+        //            x.Y = x.Y + (float)(18 * SpriteText.fontPixelZoom);
+        //            x.X = 0f;
+        //            num = 0;
+        //        }
+        //    }
+        //    return "";
+        //}
+        //private int getLastSpace(string s, int startIndex)
+        //{
+        //    for (int i = startIndex; i >= 0; i--)
+        //    {
+        //        if (s[i] == ' ')
+        //        {
+        //            return i;
+        //        }
+        //    }
+        //    return startIndex;
+        //}
+        //public int positionOfNextSpace(string s, int index, int currentXPosition, int accumulatedHorizontalSpaceBetweenCharacters)
+        //{
+        //    for (int i = index; i < s.Length; i++)
+        //    {
+        //        if (s[i] == ' ')
+        //        {
+        //            return currentXPosition;
+        //        }
+        //        currentXPosition = currentXPosition + 8 * SpriteText.fontPixelZoom + accumulatedHorizontalSpaceBetweenCharacters + (getWidthOffsetForChar(s[i]) + getWidthOffsetForChar(s[Math.Max(0, i - 1)])) * SpriteText.fontPixelZoom;
+        //        int num = SpriteText.fontPixelZoom;
+        //        accumulatedHorizontalSpaceBetweenCharacters = 0;
+        //    }
+        //    return currentXPosition;
+        //}
     }
 }
