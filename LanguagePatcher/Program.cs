@@ -60,6 +60,7 @@ namespace LanguagePatcher
                 InjectGetRandomNameCallback();
                 InjectGetOtherFarmerNamesCallback();
                 InjectParseTextCallback();
+                InjectDrawObjectDialogue();
                 InjectSpriteTextDrawStringCallback();
                 InjectSpriteTextGetWidthOfStringCallback();
                 InjectSpriteBatchDrawString();
@@ -236,6 +237,36 @@ namespace LanguagePatcher
             processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Ret));
             processor.InsertBefore(injectionPoint, jmpTarget);
         }
+        static void InjectDrawObjectDialogue()
+        {
+            var CallbackMethod = typeof(LocalizationBridge).GetMethod("DrawObjectDialogueCallback", new Type[] { typeof(string) });
+            var Callback = GameAssembly.MainModule.Import(CallbackMethod);
+
+            var injectee = GameAssembly.GetMethod("StardewValley.Game1", "drawObjectDialogue", "(System.String)System.Void");
+            var injecteeBody = injectee.Body;
+            var injecteeInstructions = injecteeBody.Instructions;
+            var processor = injecteeBody.GetILProcessor();
+
+            TypeReference stringType = GameAssembly.MainModule.Import(typeof(string));
+            injecteeBody.Variables.Add(new VariableDefinition(stringType));
+            foreach (var instruction in injecteeInstructions.ToList())
+            {
+                if (instruction.OpCode == OpCodes.Newobj)
+                {
+                    processor.Remove(instruction.Previous);
+                    processor.InsertBefore(instruction, processor.Create(OpCodes.Ldloc_0));
+                }
+            }
+
+            var injectionPoint = injecteeInstructions[0];
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Ldarg_0));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, Callback));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Stloc_0));
+        }
+        static void InjectDrawObjectQuestionDialogue()
+        {
+
+        }
         static void InjectSpriteTextDrawStringCallback()
         {
             var CallbackMethod = typeof(LocalizationBridge).GetMethod("SpriteTextDrawStringCallback",
@@ -410,6 +441,7 @@ namespace LanguagePatcher
             var injecteeBody = injectee.Body;
             var injecteeInstructions = injecteeBody.Instructions;
             var processor = injecteeBody.GetILProcessor();
+
             TypeReference stringType = GameAssembly.MainModule.Import(typeof(string));
             injecteeBody.Variables.Add(new VariableDefinition(stringType));
 

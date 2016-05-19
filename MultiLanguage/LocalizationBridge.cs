@@ -81,6 +81,16 @@ namespace MultiLanguage
             else return new DetourEvent();
         }
 
+        public static string DrawObjectDialogueCallback(string dialogue)
+        {
+            return Localization.OnDrawObjectDialogue(dialogue);
+        }
+
+        public static DialogueQuestion DrawObjectQuestionDialogueCallback(string dialogue, List<string> choices)
+        {
+            return Localization.OnDrawObjectQuestionDialogue(dialogue, choices);
+        }
+
         public static DetourEvent SpriteTextDrawStringCallback(object b, string s, int x, int y, int characterPosition,
             int width, int height, float alpha, float layerDepth, bool junimoText,
             int drawBGScroll, string placeHolderScrollWidthText, int color)
