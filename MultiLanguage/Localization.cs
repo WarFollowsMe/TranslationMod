@@ -116,17 +116,10 @@ namespace MultiLanguage
                     }
                 }
             }
-            else if (Game1.activeClickableMenu == null)
-            {
-                var dialogues = _gameAssembly.GetType("StardewValley.Menus.DialogueBox").GetField("dialogues", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(activeClickableMenu);
-            }
+            else if(Game1.activeClickableMenu == null)
             {
                 if (_isMenuDrawing)
                     _isMenuDrawing = false;
-            }
-            if(activeClickableMenu != null)
-            {
-
             }
         }
 
