@@ -83,7 +83,8 @@ namespace MultiLanguage
 
         public static string DrawObjectDialogueCallback(string dialogue)
         {
-            return Localization.OnDrawObjectDialogue(dialogue);
+            var result = Localization.OnDrawObjectDialogue(dialogue).Dialogue;
+            return result;
         }
 
         public static DialogueQuestion DrawObjectQuestionDialogueCallback(string dialogue, List<string> choices)

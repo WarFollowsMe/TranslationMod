@@ -61,6 +61,7 @@ namespace LanguagePatcher
                 InjectGetOtherFarmerNamesCallback();
                 InjectParseTextCallback();
                 InjectDrawObjectDialogue();
+                InjectDrawObjectQuestionDialogue();
                 InjectSpriteTextDrawStringCallback();
                 InjectSpriteTextGetWidthOfStringCallback();
                 InjectSpriteBatchDrawString();
@@ -249,23 +250,68 @@ namespace LanguagePatcher
 
             TypeReference stringType = GameAssembly.MainModule.Import(typeof(string));
             injecteeBody.Variables.Add(new VariableDefinition(stringType));
+            //TypeReference listType = GameAssembly.MainModule.Import(typeof(List<>).MakeGenericType(typeof(string)));
+            //injecteeBody.Variables.Add(new VariableDefinition(listType));
+
+            //var dialogueValue = typeof(DialogueQuestion).GetProperty("Dialogue");
+            //var dialogueValueImport = GameAssembly.MainModule.Import(dialogueValue.GetGetMethod());
+
             foreach (var instruction in injecteeInstructions.ToList())
             {
-                if (instruction.OpCode == OpCodes.Newobj)
+                if (instruction.OpCode == OpCodes.Ldarg_0)
                 {
-                    processor.Remove(instruction.Previous);
-                    processor.InsertBefore(instruction, processor.Create(OpCodes.Ldloc_0));
+                    processor.Replace(instruction, processor.Create(OpCodes.Ldloc_0));
+                }
+            }
+
+            var injectionPoint = injecteeInstructions.FirstOrDefault(i => i.OpCode == OpCodes.Callvirt);
+            processor.InsertAfter(injectionPoint, processor.Create(OpCodes.Stloc_0));
+            //processor.InsertAfter(injectionPoint, processor.Create(OpCodes.Call, dialogueValueImport));
+            //processor.InsertAfter(injectionPoint, processor.Create(OpCodes.Dup));
+            processor.InsertAfter(injectionPoint, processor.Create(OpCodes.Call, Callback));
+            processor.InsertAfter(injectionPoint, processor.Create(OpCodes.Ldarg_0));
+        }
+        static void InjectDrawObjectQuestionDialogue()
+        {
+            var CallbackMethod = typeof(LocalizationBridge).GetMethod("DrawObjectQuestionDialogueCallback", new Type[] { typeof(string), typeof(List<>).MakeGenericType(typeof(string)) });
+            var Callback = GameAssembly.MainModule.Import(CallbackMethod);
+
+            var injectee = GameAssembly.GetMethod("StardewValley.Game1", "drawObjectQuestionDialogue", "(System.String,System.Collections.Generic.List`1)System.Void");
+            var injecteeBody = injectee.Body;
+            var injecteeInstructions = injecteeBody.Instructions;
+            var processor = injecteeBody.GetILProcessor();
+
+            TypeReference stringType = GameAssembly.MainModule.Import(typeof(string));
+            injecteeBody.Variables.Add(new VariableDefinition(stringType));
+            TypeReference listType = GameAssembly.MainModule.Import(typeof(List<>).MakeGenericType(typeof(string)));
+            injecteeBody.Variables.Add(new VariableDefinition(listType));
+
+            var dialogueValue = typeof(DialogueQuestion).GetProperty("Dialogue");
+            var dialogueValueImport = GameAssembly.MainModule.Import(dialogueValue.GetGetMethod());
+            var choicesValue = typeof(DialogueQuestion).GetProperty("Choices");
+            var choicesValueImport = GameAssembly.MainModule.Import(choicesValue.GetGetMethod());
+
+            foreach (var instruction in injecteeInstructions.ToList())
+            {
+                if (instruction.OpCode == OpCodes.Ldarg_0)
+                {
+                    processor.Replace(instruction, processor.Create(OpCodes.Ldloc_0));
+                }
+                else if (instruction.OpCode == OpCodes.Ldarg_1)
+                {
+                    processor.Replace(instruction, processor.Create(OpCodes.Ldloc_1));
                 }
             }
 
             var injectionPoint = injecteeInstructions[0];
             processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Ldarg_0));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Ldarg_1));
             processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, Callback));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Dup));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, dialogueValueImport));
             processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Stloc_0));
-        }
-        static void InjectDrawObjectQuestionDialogue()
-        {
-
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, choicesValueImport));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Stloc_1));
         }
         static void InjectSpriteTextDrawStringCallback()
         {

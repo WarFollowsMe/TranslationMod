@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -14,13 +15,13 @@ namespace MultiLanguage
     {
         private Dictionary<string, string> _simpleDictionary;
         private Dictionary<string, string> _fuzzyDictionary;
-        private Dictionary<string, string> _memoryBuffer;
+        private OrderedDictionary _memoryBuffer;
 
         public FuzzyStringDictionary()
         {
             _simpleDictionary = new Dictionary<string, string>();
             _fuzzyDictionary = new Dictionary<string, string>();
-            _memoryBuffer = new Dictionary<string, string>();
+            _memoryBuffer = new OrderedDictionary();
         }
 
         public string this[string key]
@@ -171,8 +172,8 @@ namespace MultiLanguage
 
         private string CompareKey(string source)
         {
-            if (_memoryBuffer.ContainsKey(source))
-                return _memoryBuffer[source];
+            if (_memoryBuffer.Contains(source))
+                return _memoryBuffer[source].ToString();
 
             double score = 0;
             string resultString = "";
@@ -276,7 +277,7 @@ namespace MultiLanguage
                         keyWordKey = strI[j];
                         keyWord = strS[i];
 
-                        if (keyWordKey[0] != '@' && keyWordKey[0] != keyWord[0]) //string.IsNullOrEmpty(keyWord) || 
+                        if (keyWordKey[0] != '@' && keyWordKey[0] != keyWord[0])
                         {
                             prevKeyWordIndex = -1;
                             break;
@@ -403,18 +404,18 @@ namespace MultiLanguage
 
         void AddToMemory(string key, string value)
         {
-            if (!_memoryBuffer.ContainsKey(key))
+            if (!_memoryBuffer.Contains(key))
                 _memoryBuffer.Add(key, value);
             if (_memoryBuffer.Count > 500)
             {
-                _memoryBuffer.Remove(_memoryBuffer.First().Key);
+                _memoryBuffer.RemoveAt(0);
             }
         }
 
         string CheckInMemory(string key)
         {
-            if (_memoryBuffer.ContainsKey(key))
-                return _memoryBuffer[key];
+            if (_memoryBuffer.Contains(key))
+                return _memoryBuffer[key].ToString();
             else return string.Empty;
         }
     }
@@ -423,6 +424,7 @@ namespace MultiLanguage
     {
         public static Regex reNumber = new Regex("[\\d +-.,:]+(am|pm)*", RegexOptions.Compiled);
         public static char[] numberArr = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '+', '-', '.', ',', ':' };
+        public static Random rand = new Random();
         public static string ReplaceFirst(this string text, string search, string replace)
         {
             int pos = text.IndexOf(search);

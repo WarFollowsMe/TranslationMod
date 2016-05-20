@@ -10,6 +10,7 @@ using StardewValley.Menus;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -32,7 +33,7 @@ namespace MultiLanguage
         private bool _isMenuDrawing;
         private Regex reToSkip = new Regex("^[0-9: -=.g]+$", RegexOptions.Compiled);
         private int IsTranslated;
-        private Dictionary<string, string> _memoryBuffer;
+        private OrderedDictionary _memoryBuffer;
         private List<string> _translatedStrings;
         private int _characterPosition;
         private bool _isGameLoaded = false;
@@ -203,19 +204,21 @@ namespace MultiLanguage
             else return string.Empty;
         }
 
-        public string OnDrawObjectDialogue(string dialogue)
+        public DialogueQuestion OnDrawObjectDialogue(string dialogue)
         {
+            var result = new DialogueQuestion();
             if (Config.LanguageName != "EN")
             {
                 if (_translatedStrings.Contains(dialogue))
-                    return dialogue;
+                    result.Dialogue = dialogue;
                 var translateMessage = Translate(dialogue);
-                return translateMessage;
+                result.Dialogue = translateMessage;
             }
-            else return string.Empty;
+            else result.Dialogue = dialogue;
+            return result;
         }
 
-        public DialogueQuestion OnDrawObjectQuestionDialogue(string dialogue, List<string> choices)
+        public DialogueQuestion OnDrawObjectQuestionDialogue(string dialogue, List<string> choices = null)
         {
             var result = new DialogueQuestion();
             if (Config.LanguageName != "EN")
@@ -227,14 +230,17 @@ namespace MultiLanguage
                 var translateDialogue = Translate(dialogue);
                 result.Dialogue = translateDialogue;
                 result.Choices = new List<string>();
-                foreach(var chois in choices)
+                if(choices != null)
                 {
-                    if (_translatedStrings.Contains(chois))
+                    foreach (var chois in choices)
                     {
+                        if (_translatedStrings.Contains(chois))
+                        {
+                            result.Choices.Add(chois);
+                        }
+                        var translateChois = Translate(chois);
                         result.Choices.Add(chois);
                     }
-                    var translateChois = Translate(chois);
-                    result.Choices.Add(chois);
                 }
             }
             else
@@ -386,10 +392,10 @@ namespace MultiLanguage
                 {
                     return message;
                 }
-                if (_memoryBuffer.ContainsKey(message))
+                if (_memoryBuffer.Contains(message))
                 {
-                    if (!_memoryBuffer[message].IsNullOrEmpty())
-                        return _memoryBuffer[message];
+                    if (!_memoryBuffer[message].ToString().IsNullOrEmpty())
+                        return _memoryBuffer[message].ToString();
                     else
                         return message;
                 }
@@ -463,22 +469,28 @@ namespace MultiLanguage
 
                     if (_memoryBuffer.Count > 500)
                     {
-                        _memoryBuffer.Remove(_memoryBuffer.First().Key);
+                        _memoryBuffer.RemoveAt(0);
                     }
-                    _memoryBuffer.Add(message, resultTranslate);
-                    _translatedStrings.Add(resultTranslate);
-                    if (_translatedStrings.Count > 500)
-                        _translatedStrings.RemoveAt(0);
+                    if (!_memoryBuffer.Contains(message))
+                    {
+                        _memoryBuffer.Add(message, resultTranslate);
+                    }
+                    if (!_translatedStrings.Contains(resultTranslate))
+                    {
+                        _translatedStrings.Add(resultTranslate);
+                        if (_translatedStrings.Count > 500)
+                            _translatedStrings.RemoveAt(0);
+                    }
                     return resultTranslate;
                 }
                 else
                 {
-                    if (!_memoryBuffer.ContainsKey(message))
+                    if (!_memoryBuffer.Contains(message))
                     {
                         _memoryBuffer.Add(message, string.Empty);
                         if (_memoryBuffer.Count > 500)
                         {
-                            _memoryBuffer.Remove(_memoryBuffer.First().Key);
+                            _memoryBuffer.RemoveAt(0);
                         }
                     }
                     return message;
@@ -1199,7 +1211,7 @@ namespace MultiLanguage
 
         private void LoadDictionary()
         {
-            _memoryBuffer = new Dictionary<string, string>();
+            _memoryBuffer = new OrderedDictionary();
             _translatedStrings = new List<string>();
             _languages = new Dictionary<string, int>();
             _fuzzyDictionary = new FuzzyStringDictionary();
@@ -1326,5 +1338,9 @@ namespace MultiLanguage
     {
         public string Dialogue { get; set; }
         public List<string> Choices { get; set; }
+        public DialogueQuestion()
+        {
+            Choices = new List<string>();
+        }
     }
 }
