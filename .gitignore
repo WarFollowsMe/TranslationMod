@@ -7,7 +7,7 @@
 *.userosscache
 *.sln.docstates
 .gitmodules
-RU
+#RU
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
