@@ -112,7 +112,8 @@ namespace MultiLanguage
 
         public bool ContainsKey(string key)
         {
-            if (_simpleDictionary.ContainsKey(key))
+            if (_simpleDictionary.ContainsKey(key) ||
+                (key.First() == '\'' && key.Last() == '\'' && _simpleDictionary.ContainsKey(key.Trim('\''))))
                 return true;
 
             var value = CompareKey(key);
@@ -154,6 +155,11 @@ namespace MultiLanguage
             {
                 fuzzyKey = key;
                 value = _simpleDictionary[key];
+            }
+            else if (key.First() == '\'' && key.Last() == '\'' && _simpleDictionary.ContainsKey(key.Trim('\'')))
+            {
+                fuzzyKey = key;
+                value = "'" + _simpleDictionary[key.Trim('\'')] + "'";
             }
             else
             {

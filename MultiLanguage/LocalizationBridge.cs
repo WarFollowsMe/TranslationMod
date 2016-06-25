@@ -78,11 +78,18 @@ namespace MultiLanguage
         public static DetourEvent SpriteTextGetWidthOfStringCallback(string text)
         {
             var result = Localization.OnGetWidthSpriteText(text);
-            if(result >= 1200)
-            {
-
-            }
             if(result != -1)
+            {
+                var @event = new DetourEvent { ReturnValue = result };
+                return @event;
+            }
+            else return new DetourEvent();
+        }
+
+        public static DetourEvent SpriteTextGetHeightOfStringCallback(string text, int widthConstraint)
+        {
+            var result = Localization.OnGetHeightSpriteText(text, widthConstraint);
+            if (result != -1)
             {
                 var @event = new DetourEvent { ReturnValue = result };
                 return @event;

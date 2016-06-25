@@ -84,6 +84,7 @@ namespace LanguagePatcher
                 InjectDrawObjectQuestionDialogue();
                 InjectSpriteTextDrawStringCallback();
                 InjectSpriteTextGetWidthOfStringCallback();
+                InjectSpriteTextGetHeightOfStringCallback();
                 InjectSpriteBatchDrawString();
                 InjectSpriteFontMeasureString();
                 InjectStringBrokeIntoSectionsCallback();
@@ -186,56 +187,6 @@ namespace LanguagePatcher
             processor.InsertBefore(injecteeInstructions[0], callInstruction);
             processor.InsertBefore(callInstruction, processor.Create(OpCodes.Ldarg_1));
         }
-        //static void InjectGetRandomNameCallback()
-        //{
-        //    var CallbackMethod = typeof(LocalizationBridge).GetMethod("GetRandomNameCallback", new Type[] { });
-        //    var Callback = GameAssembly.MainModule.Import(CallbackMethod);
-
-        //    var hasReturnValue = typeof(DetourEvent).GetProperty("ReturnEarly");
-        //    var hasReturnValueImport = GameAssembly.MainModule.Import(hasReturnValue.GetGetMethod());
-        //    var eventReturnValue = typeof(DetourEvent).GetProperty("ReturnValue");
-        //    var eventReturnValueImport = GameAssembly.MainModule.Import(eventReturnValue.GetGetMethod());
-
-        //    var injectee = GameAssembly.GetMethod("StardewValley.Dialogue", "randomName", "()System.String");
-        //    var injecteeBody = injectee.Body;
-        //    var injecteeInstructions = injecteeBody.Instructions;
-        //    var processor = injecteeBody.GetILProcessor();
-
-        //    var injectionPoint = injecteeInstructions[0];
-        //    var jmpTarget = processor.Create(OpCodes.Pop);
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, Callback));
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Dup));
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, hasReturnValueImport));
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Brfalse, jmpTarget));
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, eventReturnValueImport));
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Ret));
-        //    processor.InsertBefore(injectionPoint, jmpTarget);
-        //}
-        //static void InjectGetOtherFarmerNamesCallback()
-        //{
-        //    var CallbackMethod = typeof(LocalizationBridge).GetMethod("GetOtherFarmerNamesCallback", new Type[] { });
-        //    var Callback = GameAssembly.MainModule.Import(CallbackMethod);
-
-        //    var hasReturnValue = typeof(DetourEvent).GetProperty("ReturnEarly");
-        //    var hasReturnValueImport = GameAssembly.MainModule.Import(hasReturnValue.GetGetMethod());
-        //    var eventReturnValue = typeof(DetourEvent).GetProperty("ReturnValue");
-        //    var eventReturnValueImport = GameAssembly.MainModule.Import(eventReturnValue.GetGetMethod());
-
-        //    var injectee = GameAssembly.GetMethod("StardewValley.Utility", "getOtherFarmerNames", "()System.Collections.Generic.List`1");
-        //    var injecteeBody = injectee.Body;
-        //    var injecteeInstructions = injecteeBody.Instructions;
-        //    var processor = injecteeBody.GetILProcessor();
-
-        //    var injectionPoint = injecteeInstructions[0];
-        //    var jmpTarget = processor.Create(OpCodes.Pop);
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, Callback));
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Dup));
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, hasReturnValueImport));
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Brfalse, jmpTarget));
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, eventReturnValueImport));
-        //    processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Ret));
-        //    processor.InsertBefore(injectionPoint, jmpTarget);
-        //}
         static void InjectParseTextCallback()
         {
             var CallbackMethod = typeof(LocalizationBridge).GetMethod("ParseTextCallback", new Type[] { typeof(string), typeof(object), typeof(int) });
@@ -406,6 +357,34 @@ namespace LanguagePatcher
             var injectionPoint = injecteeInstructions[0];
             var jmpTarget = processor.Create(OpCodes.Pop);
             processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Ldarg_0));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, Callback));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Dup));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, hasReturnValueImport));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Brfalse, jmpTarget));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, eventReturnValueImport));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Unbox_Any, injectee.ReturnType));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Ret));
+            processor.InsertBefore(injectionPoint, jmpTarget);
+        }
+        static void InjectSpriteTextGetHeightOfStringCallback()
+        {
+            var CallbackMethod = typeof(LocalizationBridge).GetMethod("SpriteTextGetHeightOfStringCallback", new Type[] { typeof(string), typeof(int) });
+            var Callback = GameAssembly.MainModule.Import(CallbackMethod);
+
+            var hasReturnValue = typeof(DetourEvent).GetProperty("ReturnEarly");
+            var hasReturnValueImport = GameAssembly.MainModule.Import(hasReturnValue.GetGetMethod());
+            var eventReturnValue = typeof(DetourEvent).GetProperty("ReturnValue");
+            var eventReturnValueImport = GameAssembly.MainModule.Import(eventReturnValue.GetGetMethod());
+
+            var injectee = GameAssembly.GetMethod("StardewValley.BellsAndWhistles.SpriteText", "getHeightOfString", "(System.String,System.Int32)System.Int32");
+            var injecteeBody = injectee.Body;
+            var injecteeInstructions = injecteeBody.Instructions;
+            var processor = injecteeBody.GetILProcessor();
+
+            var injectionPoint = injecteeInstructions[0];
+            var jmpTarget = processor.Create(OpCodes.Pop);
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Ldarg_0));
+            processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Ldarg_1));
             processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, Callback));
             processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Dup));
             processor.InsertBefore(injectionPoint, processor.Create(OpCodes.Call, hasReturnValueImport));

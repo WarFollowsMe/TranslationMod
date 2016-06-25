@@ -469,6 +469,38 @@ namespace MultiLanguage
             else return -1;
         }
 
+        public int OnGetHeightSpriteText(string text, int widthConstraint)
+        {
+            if (Config.LanguageName != "EN")
+            {
+                if (IsTranslated > 0)
+                {
+                    IsTranslated = 0;
+                    return -1;
+                }
+                var translateMessage = Translate(text, false);
+
+                if (!string.IsNullOrEmpty(translateMessage))
+                {
+                    IsTranslated++;
+                    var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                    var methodInfo = spriteTextType.GetMethod("getHeightOfString", BindingFlags.Public | BindingFlags.Static);
+                    var result = Convert.ToInt32(methodInfo.Invoke(null, new object[] { translateMessage, widthConstraint }));
+                    return result;
+                }
+                else if (Characters.ContainsKey(text))
+                {
+                    IsTranslated++;
+                    var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                    var methodInfo = spriteTextType.GetMethod("getHeightOfString", BindingFlags.Public | BindingFlags.Static);
+                    var result = Convert.ToInt32(methodInfo.Invoke(null, new object[] { Characters[text], widthConstraint }));
+                    return result;
+                }
+                else return -1;
+            }
+            else return -1;
+        }
+
         public string OnSpriteBatchDrawString(string message)
         {
             if (Config.LanguageName != "EN")
@@ -567,7 +599,7 @@ namespace MultiLanguage
                         var resultTranslate = message;
                         var fval = _fuzzyDictionary.GetFuzzyKeyValue(message);
 
-                        var tempFKey = fval.Key;
+                       var tempFKey = fval.Key;
                         var tempFValue = fval.Value;
 
                         if (tempFValue.Contains("^") && !tempFKey.Contains("^"))
@@ -814,9 +846,16 @@ namespace MultiLanguage
                 if (message.Contains(" "))
                 {
                     noun = nounCollection.Get(message.Split(' ').Last(), GetConditionsEnum.Similar);
-                    adj = adjectiveCollection.Get(message.Split(' ').First(), GetConditionsEnum.Similar, noun.Gender);
-                    result.Add(adj.DeclinePlural(noun.Animate));
-                    result.Add(noun.DeclinePlural());
+                    try
+                    {
+                        adj = adjectiveCollection.Get(message.Split(' ').First(), GetConditionsEnum.Similar, noun.Gender);
+                        result.Add(adj.DeclinePlural(noun.Animate));
+                        result.Add(noun.DeclinePlural());
+                    }
+                    catch
+                    {
+                        result = cyrPhrase.DeclinePlural(message, GetConditionsEnum.Similar);
+                    }
                 }
                 else
                 {
@@ -1199,6 +1238,9 @@ namespace MultiLanguage
                 cyrNumber = new CyrNumber();
             }
         }
+
+
+
         public void LoadContent(bool onlyNew)
         {
             var modeContentFolder = Path.Combine(PathOnDisk, "languages", Config.LanguageName, "content");
@@ -1219,7 +1261,22 @@ namespace MultiLanguage
                         }
                     }
                     if (fileName == "townInterior.xnb" ||
-                        fileName == "HospitalTiles.xnb")
+                        fileName == "HospitalTiles.xnb" || 
+                        fileName == "bathhouse_tiles.xnb" ||
+                        fileName == "desertTiles.xnb" ||
+                        fileName == "fall_outdoorsTileSheet.xnb" ||
+                        fileName == "fall_town.xnb" ||
+                        fileName == "Festivals.xnb" ||
+                        fileName == "HospitalTiles.xnb" ||
+                        fileName == "spring_beach.xnb" ||
+                        fileName == "spring_outdoorsTileSheet.xnb" ||
+                        fileName == "spring_town.xnb" ||
+                        fileName == "spring_townbuildings.xnb" ||
+                        fileName == "summer_beach.xnb" ||
+                        fileName == "TownIndoors.xnb" ||
+                        fileName == "winter_beach.xnb" ||
+                        fileName == "winter_outdoorsTileSheet.xnb" ||
+                        fileName == "winter_town.xnb")
                     {
                         gameFile = new FileInfo(Path.Combine(gameContentFolder, fileName));
                         if (gameFile.Exists)
