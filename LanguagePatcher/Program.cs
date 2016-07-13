@@ -41,38 +41,38 @@ namespace LanguagePatcher
             Console.WriteLine(" ");
 
             LocalizationBridge.Localization = new Localization();
-            GameAssembly = AssemblyDefinition.ReadAssembly(LocalizationBridge.Localization.Config.ExecutingAssembly);
+            GameAssembly = AssemblyDefinition.ReadAssembly("Stardew Valley.exe");// (LocalizationBridge.Localization.Config.ExecutingAssembly);
             if (!CheckPatchedMark())
             {
-                while(true)
-                {
-                    Console.WriteLine("Version of your game is not localized. Do you want to patch the game? (y = Yes; n = No)");
-                    var answer = Console.ReadLine();
-                    if (answer == "y")
-                    {
-                        break;
-                    }
-                    else if(answer == "n")
-                    {
-                        StartGame("Stardew Valley.exe");
-                        return;
-                    }
-                }
-                while (true)
-                {
-                    Console.WriteLine("Do you want to create new 'Stardew Valley (multilang).exe' file (can't using mods) or rewrite  original 'Stardew Valley.exe'? (1 = Create; 2 = Rewrite");
-                    var answer = Console.ReadLine();
-                    if (answer == "1")
-                    {
-                        LocalizationBridge.Localization.Config.ExecutingAssembly = "Stardew Valley (multilang).exe";
-                        break;
-                    }
-                    else if (answer == "2")
-                    {
-                        LocalizationBridge.Localization.Config.ExecutingAssembly = "Stardew Valley.exe";
-                        break;
-                    }
-                }
+                //while(true)
+                //{
+                //    Console.WriteLine("Version of your game is not localized. Do you want to patch the game? (y = Yes; n = No)");
+                //    var answer = Console.ReadLine();
+                //    if (answer == "y")
+                //    {
+                //        break;
+                //    }
+                //    else if(answer == "n")
+                //    {
+                //        StartGame("Stardew Valley.exe");
+                //        return;
+                //    }
+                //}
+                //while (true)
+                //{
+                //    Console.WriteLine("Do you want to create new 'Stardew Valley (multilang).exe' file (can't using mods) or rewrite  original 'Stardew Valley.exe'? (1 = Create; 2 = Rewrite");
+                //    var answer = Console.ReadLine();
+                //    if (answer == "1")
+                //    {
+                //        LocalizationBridge.Localization.Config.ExecutingAssembly = "Stardew Valley (multilang).exe";
+                //        break;
+                //    }
+                //    else if (answer == "2")
+                //    {
+                //        LocalizationBridge.Localization.Config.ExecutingAssembly = "Stardew Valley.exe";
+                //        break;
+                //    }
+                //}
 
                 InjectClientSizeChangedCallback();
                 InjectUpdateCallback();
@@ -92,16 +92,20 @@ namespace LanguagePatcher
                 SetPatchedMark();
                 GameAssembly.Write(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), LocalizationBridge.Localization.Config.ExecutingAssembly));
                 Console.WriteLine("Patch successfully applied. Enjoy!");
-                Console.ReadLine();
+                //Console.ReadLine();
             }
 #if DEBUG
-            StartGame(LocalizationBridge.Localization.Config.ExecutingAssembly);
+            //StartGame(LocalizationBridge.Localization.Config.ExecutingAssembly);
 #endif
         }
 
         static bool CheckPatchedMark()
         {
             var patchedType = GameAssembly.MainModule.GetType("StardewValley.Game1");
+            if(patchedType == null)
+            {
+                //patchedType
+            }
             var patched = patchedType.Fields.Where(f => f.FullName == "System.Boolean StardewValley.Game1::patched").Count() > 0;
             if (patched)
             {

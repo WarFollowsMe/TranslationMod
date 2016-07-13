@@ -49,7 +49,9 @@ namespace MultiLanguage
             {
                 if(_player == null)
                 {
-                    var game1Type = _gameAssembly.GetType("StardewValley.Game1");
+                    //using for STORM API or else who useing injections and create its .exe
+                    //var game1Type = _gameAssembly.GetType("StardewValley.Game1");
+                    var game1Type = typeof(StardewValley.Game1);
                     _player = game1Type.GetField("player", BindingFlags.Static | BindingFlags.Public).GetValue(null);
                 }
                 return _player;
@@ -94,7 +96,9 @@ namespace MultiLanguage
             {
                 _gameAssembly = Assembly.LoadFile(Path.Combine(PathOnDisk, Config.ExecutingAssembly));
             }
-            var gameType = _gameAssembly.GetType("StardewValley.Game1");
+            //using for STORM API or else who useing injections and create its .exe
+            //var gameType = _gameAssembly.GetType("StardewValley.Game1");
+            var gameType = typeof(StardewValley.Game1);
             var player = Tools.GetInstanceField(gameType, game, "player");
             var activeClickableMenu = Tools.GetInstanceField(gameType, game, "activeClickableMenu");
             var uniqueIDForThisGame = Tools.GetInstanceField(gameType, game, "uniqueIDForThisGame");
@@ -118,8 +122,9 @@ namespace MultiLanguage
                     #region screeshot
                     int width = graphics.IsFullScreen ? graphics.PreferredBackBufferWidth : game.Window.ClientBounds.Width;
                     int height = graphics.IsFullScreen ? graphics.PreferredBackBufferHeight : game.Window.ClientBounds.Height;
-                    _gameAssembly.GetType("StardewValley.Game1")
-                        .GetMethod("Draw", BindingFlags.Instance | BindingFlags.NonPublic)
+                    //using for STORM API or else who useing injections and create its .exe
+                    //_gameAssembly.GetType("StardewValley.Game1")
+                    typeof(StardewValley.Game1).GetMethod("Draw", BindingFlags.Instance | BindingFlags.NonPublic)
                         .Invoke(game,
                         new object[] { new GameTime() });                    
                     int[] backBuffer = new int[width * height];
@@ -159,10 +164,6 @@ namespace MultiLanguage
                     FastZip fastZip = new FastZip();
                     fastZip.CreateZip(Path.Combine(reportFolder, "report.zip"),
                         tempFolder.FullName, true, null);
-                    //_gameAssembly.GetType("StardewValley.Game1")
-                    //    .GetMethod("showGlobalMessage", BindingFlags.Static | BindingFlags.Public)
-                    //    .Invoke(game,
-                    //    new object[] { string.Format("Report file {0} is created", save + "_" + DateTime.Now.ToString("dd_MM_yyyy_HH_mm_ss") + ".zip") });
                     #endregion
                     tempFolder.Delete(true);
                 }
@@ -197,13 +198,17 @@ namespace MultiLanguage
             {
                 if (activeClickableMenu.GetType().ToString() == "StardewValley.Menus.TitleMenu")
                 {
-                    var titleType = _gameAssembly.GetType("StardewValley.Menus.TitleMenu");
+                    //using for STORM API or else who useing injections and create its .exe
+                    //var titleType = _gameAssembly.GetType("StardewValley.Menus.TitleMenu");
+                    var titleType = typeof(StardewValley.Menus.TitleMenu);
                     var subMenu = Tools.GetInstanceField(titleType, activeClickableMenu, "subMenu");
                     if (subMenu != null && subMenu.GetType().ToString() == "StardewValley.Menus.CharacterCustomization")
                     {
                         if (!_isTextInput)
                             _isTextInput = true;
-                        var subMenuType = _gameAssembly.GetType("StardewValley.Menus.CharacterCustomization");
+                        //using for STORM API or else who useing injections and create its .exe
+                        //var subMenuType = _gameAssembly.GetType("StardewValley.Menus.CharacterCustomization");
+                        var subMenuType = typeof(StardewValley.Menus.CharacterCustomization);
                         dynamic nameBox = Tools.GetInstanceField(subMenuType, subMenu, "nameBox");
                         dynamic farmnameBox = Tools.GetInstanceField(subMenuType, subMenu, "farmnameBox");
                         dynamic favThingBox = Tools.GetInstanceField(subMenuType, subMenu, "favThingBox");
@@ -233,7 +238,9 @@ namespace MultiLanguage
                 {
                     if (!_isTextInput)
                         _isTextInput = true;
-                    var namingMenuType = _gameAssembly.GetType("StardewValley.Menus.NamingMenu");
+                    //using for STORM API or else who useing injections and create its .exe
+                    //var namingMenuType = _gameAssembly.GetType("StardewValley.Menus.NamingMenu");
+                    var namingMenuType = typeof(StardewValley.Menus.NamingMenu);
                     dynamic textBox = Tools.GetInstanceField(namingMenuType, activeClickableMenu, "textBox");
                     if (textBox != null && !string.IsNullOrEmpty(textBox.Text.ToString()))
                     {
@@ -251,10 +258,15 @@ namespace MultiLanguage
             #region add language option in Game Menu
             if (activeClickableMenu != null && activeClickableMenu.GetType().ToString() == "StardewValley.Menus.GameMenu")
             {
-                var gameMenuType = _gameAssembly.GetType("StardewValley.Menus.GameMenu");
-                var optionElementType = _gameAssembly.GetType("StardewValley.Menus.OptionsElement");
-                var optionPageType = _gameAssembly.GetType("StardewValley.Menus.OptionsPage");
-                var optionsDropDownType = _gameAssembly.GetType("StardewValley.Menus.OptionsDropDown");
+                //uncomment if you wanna using for example STORM API or else who create its own .exe
+                //var gameMenuType = _gameAssembly.GetType("StardewValley.Menus.GameMenu");
+                var gameMenuType = typeof(StardewValley.Menus.GameMenu);
+                //var optionElementType = _gameAssembly.GetType("StardewValley.Menus.OptionsElement");
+                var optionElementType = typeof(StardewValley.Menus.OptionsElement);
+                //var optionPageType = _gameAssembly.GetType("StardewValley.Menus.OptionsPage");
+                var optionPageType = typeof(StardewValley.Menus.OptionsPage);
+                //var optionsDropDownType = _gameAssembly.GetType("StardewValley.Menus.OptionsDropDown");
+                var optionsDropDownType = typeof(StardewValley.Menus.OptionsDropDown);
                 var pages = (Tools.GetInstanceField(gameMenuType, activeClickableMenu, "pages") as IList).Cast<object>();
                 
                 var optionPage = pages.FirstOrDefault(p => optionPageType == p.GetType());
@@ -298,7 +310,9 @@ namespace MultiLanguage
                 {
                     Config.LanguageName = selectedLang;
                     _currentLanguage = selectedLang;
-                    var spriteTextType = _gameAssembly.GetType("StardewValley.Game1");
+                    //uncomment if you wanna using for example STORM API or else who create its own .exe
+                    //var spriteTextType = _gameAssembly.GetType("StardewValley.Game1");
+                    var spriteTextType = typeof(StardewValley.Game1);
                     var methodInfo = spriteTextType.GetMethod("showGlobalMessage", BindingFlags.Public | BindingFlags.Static);
                     methodInfo.Invoke(null, new object[] { "This change will not take effect until you restart the game" });
                     new Thread(() => LoadContent(false)).Start();
@@ -451,7 +465,9 @@ namespace MultiLanguage
                 if (!string.IsNullOrEmpty(translateMessage))
                 {
                     IsTranslated++;
-                    var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                    //uncomment if you wanna using for example STORM API or else who create its own .exe
+                    //var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                    var spriteTextType = typeof(StardewValley.BellsAndWhistles.SpriteText);
                     var methodInfo = spriteTextType.GetMethod("getWidthOfString", BindingFlags.Public | BindingFlags.Static);
                     var result = Convert.ToInt32(methodInfo.Invoke(null, new object[] { translateMessage }));
                     return result;
@@ -459,7 +475,9 @@ namespace MultiLanguage
                 else if (Characters.ContainsKey(text))
                 {
                     IsTranslated++;
-                    var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                    //uncomment if you wanna using for example STORM API or else who create its own .exe
+                    //var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                    var spriteTextType = typeof(StardewValley.BellsAndWhistles.SpriteText);
                     var methodInfo = spriteTextType.GetMethod("getWidthOfString", BindingFlags.Public | BindingFlags.Static);
                     var result = Convert.ToInt32(methodInfo.Invoke(null, new object[] { Characters[text] }));
                     return result;
@@ -483,7 +501,9 @@ namespace MultiLanguage
                 if (!string.IsNullOrEmpty(translateMessage))
                 {
                     IsTranslated++;
-                    var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                    //uncomment if you wanna using for example STORM API or else who create its own .exe
+                    //var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                    var spriteTextType = typeof(StardewValley.BellsAndWhistles.SpriteText);
                     var methodInfo = spriteTextType.GetMethod("getHeightOfString", BindingFlags.Public | BindingFlags.Static);
                     var result = Convert.ToInt32(methodInfo.Invoke(null, new object[] { translateMessage, widthConstraint }));
                     return result;
@@ -491,7 +511,9 @@ namespace MultiLanguage
                 else if (Characters.ContainsKey(text))
                 {
                     IsTranslated++;
-                    var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                    //uncomment if you wanna using for example STORM API or else who create its own .exe
+                    //var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                    var spriteTextType = typeof(StardewValley.BellsAndWhistles.SpriteText);
                     var methodInfo = spriteTextType.GetMethod("getHeightOfString", BindingFlags.Public | BindingFlags.Static);
                     var result = Convert.ToInt32(methodInfo.Invoke(null, new object[] { Characters[text], widthConstraint }));
                     return result;
@@ -543,7 +565,9 @@ namespace MultiLanguage
                     var s = translateMessage;
                     for (; s.Length > 0; s = s.Substring(list.Last().Length))
                     {
-                        var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                        //uncomment if you wanna using for example STORM API or else who create its own .exe
+                        //var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+                        var spriteTextType = typeof(StardewValley.BellsAndWhistles.SpriteText);
                         var methodInfo = spriteTextType.GetMethod("getStringPreviousToThisHeightCutoff", BindingFlags.Public | BindingFlags.Static);
                         string thisHeightCutoff = methodInfo.Invoke(null, new object[] { s, width, height }).ToString();
                         if (thisHeightCutoff.Length > 0)
@@ -628,10 +652,14 @@ namespace MultiLanguage
                         }
                         if (tempFValue.Contains("|"))
                         {
-                            dynamic npc = _gameAssembly.GetType("StardewValley.Game1").GetField("currentSpeaker", BindingFlags.Static | BindingFlags.Public).GetValue(null);
+                            //uncomment if you wanna using for example STORM API or else who create its own .exe
+                            //dynamic npc = _gameAssembly.GetType("StardewValley.Game1").GetField("currentSpeaker", BindingFlags.Static | BindingFlags.Public).GetValue(null);
+                            dynamic npc = typeof(StardewValley.Game1).GetField("currentSpeaker", BindingFlags.Static | BindingFlags.Public).GetValue(null);
                             if (npc == null && string.IsNullOrEmpty(Player.spouse))
                             {
-                                var spriteTextType = _gameAssembly.GetType("StardewValley.Game1");
+                                //uncomment if you wanna using for example STORM API or else who create its own .exe
+                                //var spriteTextType = _gameAssembly.GetType("StardewValley.Game1");
+                                var spriteTextType = typeof(StardewValley.Game1);
                                 var methodInfo = spriteTextType.GetMethod("getCharacterFromName", BindingFlags.Public | BindingFlags.Static);
                                 npc = methodInfo.Invoke(null, new object[] { Player.spouse });
                             }
@@ -983,8 +1011,12 @@ namespace MultiLanguage
                                 int width, int height, float alpha, float layerDepth, bool junimoText,
                                 int drawBGScroll, string placeHolderScrollWidthText, int color)
         {
-            var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
-            var game1Type = _gameAssembly.GetType("StardewValley.Game1");
+            //uncomment if you wanna using for example STORM API or else who create its own .exe
+            //var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+            var spriteTextType = typeof(StardewValley.BellsAndWhistles.SpriteText);
+            //uncomment if you wanna using for example STORM API or else who create its own .exe
+            //var game1Type = _gameAssembly.GetType("StardewValley.Game1");
+            var game1Type = typeof(StardewValley.Game1);
             int fontPixelZoom = (int)spriteTextType.GetField("fontPixelZoom", BindingFlags.Static | BindingFlags.Public).GetValue(null);
             int pixelZoom = (int)game1Type.GetField("pixelZoom", BindingFlags.Static | BindingFlags.Public).GetValue(null);
             dynamic graphics = game1Type.GetField("graphics", BindingFlags.Static | BindingFlags.Public).GetValue(null);
@@ -1138,7 +1170,9 @@ namespace MultiLanguage
 
         private Rectangle getSourceRectForChar(char c, bool junimoText)
         {
-            var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+            //uncomment if you wanna using for example STORM API or else who create its own .exe
+            //var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
+            var spriteTextType = typeof(StardewValley.BellsAndWhistles.SpriteText);
             dynamic spriteTexture = spriteTextType.GetField("spriteTexture", BindingFlags.Static | BindingFlags.Public).GetValue(null) as Texture2D;
             int num = (int)c - 32;
             return new Rectangle(num * 8 % spriteTexture.Width, num * 8 / spriteTexture.Width * 16 + (junimoText ? 96 : 0), 8, 16);
