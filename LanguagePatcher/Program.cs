@@ -248,7 +248,7 @@ namespace LanguagePatcher
         }
         static void InjectDrawObjectQuestionDialogue()
         {
-            var CallbackMethod = typeof(LocalizationBridge).GetMethod("DrawObjectQuestionDialogueCallback", new Type[] { typeof(string), typeof(List<>).MakeGenericType(typeof(string)) });
+            var CallbackMethod = typeof(LocalizationBridge).GetMethod("DrawObjectQuestionDialogueCallback", new Type[] { typeof(string), typeof(List<>).MakeGenericType(typeof(object)) });
             var Callback = GameAssembly.MainModule.Import(CallbackMethod);
 
             var injectee = GameAssembly.GetMethod("StardewValley.Game1", "drawObjectQuestionDialogue", "(System.String,System.Collections.Generic.List`1)System.Void");
