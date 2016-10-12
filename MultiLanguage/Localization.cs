@@ -10,12 +10,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using StardewValley;
 
 namespace MultiLanguage
 {
@@ -382,7 +384,7 @@ namespace MultiLanguage
             return result;
         }
 
-        public DialogueQuestion OnDrawObjectQuestionDialogue(string dialogue, List<string> choices = null)
+        public DialogueQuestion OnDrawObjectQuestionDialogue(string dialogue, List<object> choices = null)
         {
             var result = new DialogueQuestion();
             if (Config.LanguageName != "EN")
@@ -393,16 +395,22 @@ namespace MultiLanguage
                 }
                 var translateDialogue = Translate(dialogue);
                 result.Dialogue = translateDialogue;
-                result.Choices = new List<string>();
+                result.Choices = new List<object>();
                 if(choices != null)
                 {
                     foreach (var chois in choices)
                     {
-                        if (_translatedStrings.Contains(chois))
+                        var choice = chois as Response;
+                        if (choice == null)
+                        {
+                            result.Choices.Add(null);
+                            continue;
+                        }
+                        if (_translatedStrings.Contains(choice.responseText))
                         {
                             result.Choices.Add(chois);
                         }
-                        var translateChois = Translate(chois);
+                        var translateChois = Translate(choice.responseText);
                         result.Choices.Add(chois);
                     }
                 }
@@ -1328,10 +1336,10 @@ namespace MultiLanguage
     public class DialogueQuestion
     {
         public string Dialogue { get; set; }
-        public List<string> Choices { get; set; }
+        public List<object> Choices { get; set; }
         public DialogueQuestion()
         {
-            Choices = new List<string>();
+            Choices = new List<object>();
         }
     }
 }
