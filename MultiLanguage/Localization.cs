@@ -409,8 +409,10 @@ namespace MultiLanguage
                         if (_translatedStrings.Contains(choice.responseText))
                         {
                             result.Choices.Add(chois);
+                            continue;
                         }
                         var translateChois = Translate(choice.responseText);
+                        choice.responseText = translateChois;
                         result.Choices.Add(chois);
                     }
                 }
