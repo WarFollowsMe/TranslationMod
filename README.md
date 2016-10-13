@@ -98,11 +98,9 @@ To activate a new language package, you need to change "LanguageName" value in C
 **IMPORTANT! Changes will take place only after game restart.**
 
 ### Using mods. 
-* **SMAPI** - is not supported, because of the fact it's using their own game wrapper, and our injections doesnt work.
-* **STORM** - works, but we are not tested it much. 
-* **Farmhand** - not tested, but judging by source codes, it must work, in theory. Because it contains of similar approach from both Storm API and SMAPI, it changes game functionality with Mono.Cecil as we are. To use it, you just need to patch original "Stardew Valley.exe", and in "config.json" change "ExecutingAssembly" propery to name of .exe file Storm uses. 
+* **SMAPI** supported
 
-Anyway you can test this tool at your own risk with other mod tools using this technique.
+You can test any mod tool at your own risk.
 *Just keep in mind that at the time we do not prioritize this task.*
 
 
