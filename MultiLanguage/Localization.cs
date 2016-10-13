@@ -69,6 +69,8 @@ namespace MultiLanguage
         private CyrAdjectiveCollection adjectiveCollection;
         #endregion
 
+        private static SpriteFont chineseFont;
+
         public Localization()
         {
             PathOnDisk = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -430,7 +432,13 @@ namespace MultiLanguage
             if (Config.LanguageName != "EN")
             {
                 if (_translatedStrings.Contains(@event.Text))
+                {
+                    drawString(@event.Sprite, @event.Text, @event.X, @event.Y, _characterPosition,
+                        @event.Width, @event.Height, @event.Alpha, @event.LayerDepth, @event.JunimoText,
+                        @event.DrawBGScroll, @event.PlaceHolderScrollWidthText, @event.Color);
+                    @event.ReturnEarly = true;
                     return;
+                }
                 var originalText = @event.Text;
                 var translateText = @event.Text;
                 if (Characters.ContainsKey(@event.Text))
@@ -1021,6 +1029,9 @@ namespace MultiLanguage
                                 int width, int height, float alpha, float layerDepth, bool junimoText,
                                 int drawBGScroll, string placeHolderScrollWidthText, int color)
         {
+            if (chineseFont == null)
+                chineseFont = Game1.content.Load<SpriteFont>("Fonts\\ChineseFont");
+
             //uncomment if you wanna using for example STORM API or else who create its own .exe
             //var spriteTextType = _gameAssembly.GetType("StardewValley.BellsAndWhistles.SpriteText");
             var spriteTextType = typeof(StardewValley.BellsAndWhistles.SpriteText);
@@ -1036,7 +1047,6 @@ namespace MultiLanguage
 
             var getWidthOfStringInfo = spriteTextType.GetMethod("getWidthOfString", BindingFlags.Public | BindingFlags.Static);
             var getWidthOffsetForCharInfo = spriteTextType.GetMethod("getWidthOffsetForChar", BindingFlags.Public | BindingFlags.Static);
-            var positionOfNextSpaceInfo = spriteTextType.GetMethod("positionOfNextSpace", BindingFlags.Public | BindingFlags.Static);
             var getColorFromIndexInfo = spriteTextType.GetMethod("getColorFromIndex", BindingFlags.Public | BindingFlags.Static);
 
             if (width == -1)
@@ -1152,22 +1162,34 @@ namespace MultiLanguage
                     if (i > 0)
                     {
                         position.X = position.X +
-                            (float)(8 * fontPixelZoom + accumulatedHorizontalSpaceBetweenCharacters +
+                            (float)((s[i] > 256 ? 16 : 8) * fontPixelZoom + accumulatedHorizontalSpaceBetweenCharacters +
                             (int)getWidthOffsetForCharInfo.Invoke(null, new object[] { s[i] }) +
                             (int)getWidthOffsetForCharInfo.Invoke(null, new object[] { s[i - 1] }) * fontPixelZoom);
                     }
                     int num = fontPixelZoom;
                     accumulatedHorizontalSpaceBetweenCharacters = 0;
-                    if ((int)positionOfNextSpaceInfo.Invoke(null, new object[] { s, i, (int)position.X, accumulatedHorizontalSpaceBetweenCharacters }) >= x + width - pixelZoom)
+                    if ((double) position.X + 48.0 >= (double) (x + width - Game1.pixelZoom))
                     {
                         position.Y = position.Y + (float)(18 * fontPixelZoom);
                         accumulatedHorizontalSpaceBetweenCharacters = 0;
                         position.X = (float)x;
                     }
-                    b.Draw((color != -1 ? coloredTexture : spriteTexture), position,
-                        new Rectangle?(getSourceRectForChar(s[i], junimoText)),
-                        (Color)getColorFromIndexInfo.Invoke(null, new object[] { color }) * alpha, 0f, Vector2.Zero, (float)fontPixelZoom,
-                        SpriteEffects.None, layerDepth);
+                    if (s[i] > 256)
+                    {
+                        b.DrawString(chineseFont, s[i].ToString(), new Vector2(position.X - 1f, position.Y - 17f),
+                            new Color(224, 150, 80, Byte.MaxValue), 0f, new Vector2(0f, 0f), 2.8f, SpriteEffects.None,
+                            0f);
+                        b.DrawString(chineseFont, s[i].ToString(), new Vector2(position.X, position.Y - 16f),
+                            new Color(82, 22, 12, Byte.MaxValue), 0f, new Vector2(0f, 0f), 2.8f, SpriteEffects.None,
+                            0f);
+                    }
+                    else
+                    {
+                        b.Draw((color != -1 ? coloredTexture : spriteTexture), position,
+                            new Rectangle?(getSourceRectForChar(s[i], junimoText)),
+                            (Color)getColorFromIndexInfo.Invoke(null, new object[] { color }) * alpha, 0f, Vector2.Zero, (float)fontPixelZoom,
+                            SpriteEffects.None, layerDepth);
+                    }
                 }
                 else
                 {
@@ -1297,12 +1319,9 @@ namespace MultiLanguage
                     var fileName = Path.GetFileName(file);
                     var gameFile = new FileInfo(Path.Combine(gameContentFolder, directory.Split('\\').Last(), fileName));
                     var modeFile = new FileInfo(Path.Combine(directory, fileName));
-                    if (gameFile.Exists)
+                    if (!gameFile.Exists || (onlyNew && gameFile.LastWriteTime != modeFile.LastWriteTime) || !onlyNew)
                     {
-                        if ((onlyNew && gameFile.LastWriteTime != modeFile.LastWriteTime) || !onlyNew)
-                        {
-                            modeFile.CopyTo(gameFile.FullName, true);
-                        }
+                        modeFile.CopyTo(gameFile.FullName, true);
                     }
                     if (fileName == "townInterior.xnb" ||
                         fileName == "HospitalTiles.xnb" || 

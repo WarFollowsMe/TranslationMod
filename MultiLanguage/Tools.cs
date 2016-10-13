@@ -85,7 +85,7 @@ namespace MultiLanguage
                 }
                 else _fuzzyDictionary.Add(key, value);
             }
-            catch (ArgumentException e) { }
+            catch (ArgumentException) { }
         }
 
         public void AddRange(IEnumerable<KeyValuePair<string, string>> pairs)
@@ -100,7 +100,7 @@ namespace MultiLanguage
                     }
                     else _fuzzyDictionary.Add(pair.Key, pair.Value);
                 }
-                catch (ArgumentException e) { }
+                catch (ArgumentException) { }
             }
         }
 
