@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using StardewValley;
 
 namespace MultiLanguage
 {
@@ -61,7 +62,7 @@ namespace MultiLanguage
             return result;
         }
 
-        public static DialogueQuestion DrawObjectQuestionDialogueCallback(string dialogue, List<string> choices)
+        public static DialogueQuestion DrawObjectQuestionDialogueCallback(string dialogue, List<object> choices)
         {
             return Localization.OnDrawObjectQuestionDialogue(dialogue, choices);
         }
